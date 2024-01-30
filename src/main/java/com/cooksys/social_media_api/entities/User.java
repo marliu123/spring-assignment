@@ -1,6 +1,7 @@
 package com.cooksys.social_media_api.entities;
 
 
+import com.cooksys.social_media_api.embeddables.Credentials;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class User {
     private Long id;
 
     @Embedded
-    private String username;
+    private Credentials credentials;
 
     @Column(nullable = false)
     private Timestamp joined;// final?
