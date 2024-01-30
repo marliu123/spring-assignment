@@ -4,6 +4,7 @@ import com.cooksys.social_media_api.dtos.HashtagDto;
 import com.cooksys.social_media_api.dtos.TweetRequestDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.services.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/tweets")
 public class TweetController {
+
+    private TweetService tweetService;
 
     @GetMapping
     public List<TweetResponseDto> getAllNonDeletedTweets() { return tweetService.getAllNonDeletedTweets(); }

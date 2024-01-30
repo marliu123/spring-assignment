@@ -2,14 +2,10 @@ package com.cooksys.social_media_api.services;
 
 import com.cooksys.social_media_api.dtos.HashtagDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
-import com.cooksys.social_media_api.entities.Hashtag;
-import com.cooksys.social_media_api.mappers.HashtagMapper;
-import com.cooksys.social_media_api.repositories.HashtagRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+<<<<<<< HEAD
 @Service
 @RequiredArgsConstructor
 public class HashtagService {
@@ -24,3 +20,9 @@ public class HashtagService {
 
         return hashtagRepository.getByLabel(label);}
 }
+=======
+public interface HashtagService {
+    List<HashtagDto> getAllHashtags();
+    public List<TweetResponseDto> getAllTweetsByHashtag(String label);
+}
+>>>>>>> 60d506feb6ee7d6288f0e2c818e1c31a04dd209c
