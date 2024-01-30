@@ -7,9 +7,10 @@ import org.mapstruct.Mapper;
 import com.cooksys.social_media_api.dtos.TweetRequestDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.entities.Tweet;
+import org.springframework.stereotype.Component;
 
 
-
+@Component
 @Mapper(componentModel = "spring")
 public interface TweetMapper {
 

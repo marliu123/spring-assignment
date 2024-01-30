@@ -6,7 +6,9 @@ import org.mapstruct.Mapper;
 
 import com.cooksys.social_media_api.dtos.CredentialsDto;
 import com.cooksys.social_media_api.embeddables.Credentials;
+import org.springframework.stereotype.Component;
 
+@Component
 @Mapper(componentModel = "spring")
 public interface CredentialsMapper {
 

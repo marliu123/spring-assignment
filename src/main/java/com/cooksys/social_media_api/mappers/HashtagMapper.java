@@ -6,8 +6,10 @@ import org.mapstruct.Mapper;
 
 import com.cooksys.social_media_api.dtos.HashtagDto;
 import com.cooksys.social_media_api.entities.Hashtag;
+import org.springframework.stereotype.Component;
 
 
+@Component
 @Mapper(componentModel = "spring")
 public interface HashtagMapper {
 

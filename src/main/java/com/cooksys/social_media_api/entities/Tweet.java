@@ -15,16 +15,22 @@ public class Tweet {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private Timestamp posted; // final?
-
-    private String content;
-
-    private Tweet inReplyTo;
-
-    private Tweet repostOf;
-
     @ManyToOne
     @JoinColumn
     private User author;
+
+    @Column(nullable = false)
+    private Timestamp posted; // final?
+
+    private boolean deleted;
+
+    private String content;
+
+    @OneToOne
+    private Tweet inReplyTo;
+
+    @OneToOne
+    private Tweet repostOf;
+
+
 }
