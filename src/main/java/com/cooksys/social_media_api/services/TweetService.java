@@ -21,5 +21,4 @@ public interface TweetService {
     public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id);
     public List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
 
-
 }
