@@ -16,5 +16,7 @@ public interface ProfileMapper {
 			
 	List<ProfileDto> entitiesToDtos(List<Profile> entities);
 
+	Profile dtoToEntity(ProfileDto profileDto);
+
 
 }
