@@ -21,5 +21,6 @@ public class HashtagService {
         return hashtagMapper.entitiesToDtos(hashtagRepository.findAll());}
 
     public List<TweetResponseDto> getAllTweetsByHashtag(String label) {
+
         return hashtagRepository.getByLabel(label);}
 }
