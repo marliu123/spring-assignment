@@ -30,7 +30,9 @@ public class TweetController {
     public TweetResponseDto deleteTweetById(@PathVariable Long id) { return tweetService.deleteTweetById(id); }
 
     @PostMapping("/{id}/like")
-    public void likeTweetById(@PathVariable Long id) { return tweetService.likeTweetById(id); }
+    public void likeTweetById(@PathVariable Long id) {
+//        return tweetService.likeTweetById(id);
+    }
 
     @PostMapping("/{id}/reply")
     public TweetResponseDto  replyToTweetById(@PathVariable Long id, @RequestBody TweetRequestDto tweet) { return tweetService.replyToTweetById(id, tweet); }

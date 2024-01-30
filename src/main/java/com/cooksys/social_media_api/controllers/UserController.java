@@ -4,6 +4,7 @@ package com.cooksys.social_media_api.controllers;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +35,12 @@ public class UserController {
 
     @PostMapping("/{username}/follow")
     public void followUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-        return userService.followUserByUsername(username, user);
+//        return userService.followUserByUsername(username, user);
     }
 
     @PostMapping("/{username}/unfollow")
     public void unfollowUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-        return userService.unfollowUserByUsername(username, user);
+//        return userService.unfollowUserByUsername(username, user);
     }
 
     // this cascades and includes tweets/retweets by followers

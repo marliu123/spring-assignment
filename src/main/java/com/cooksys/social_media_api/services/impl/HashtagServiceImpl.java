@@ -21,6 +21,6 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     public List<TweetResponseDto> getAllTweetsByHashtag(String label) {
-        return hashtagRepository.getByLabel(label);
+        return null;
     }
 }

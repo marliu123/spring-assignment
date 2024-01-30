@@ -34,40 +34,51 @@ public class TweetServiceImpl implements TweetService {
     { return tweetMapper.entityToDto(tweetRepository.getById(id));}
 
     public TweetResponseDto deleteTweetById(Long id) {
-        return tweetMapper.entityToDto(tweetRepository.deleteById(id));
+//        return tweetMapper.entityToDto(tweetRepository.deleteById(id));
+        return null;
     }
 
     public void likeTweetById(Long id) {//add/send like to tweet by ID}
     }
 
     public TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet) {
-        return tweetMapper.entityToDto(tweetRepository.replyToTweetById(id, tweet));
+//        return tweetMapper.entityToDto(tweetRepository.replyToTweetById(id, tweet));
+        return null;
     }
 
     public TweetResponseDto repostTweetById(Long id) {
-        return tweetMapper.entityToDto(tweetRepository.repostTweetById(id));
+//        return tweetMapper.entityToDto(tweetRepository.repostTweetById(id));
+        return null;
     }
 
     public List<HashtagDto> getAllHashtagsForSpeciTweet(Long id) {
         // return get all from hashtag service or repo?
+        return null;
     }
 
     public List<UserResponseDto> getAllUsersThatLikedSpeciTweet(Long id) {
         //return get all from user service or repo?
+        return null;
     }
 
     public List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id) {
-        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepliesForSpeciTweet(id));
+//        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepliesForSpeciTweet(id));
         //can just get the tweet and iterate through its replies
+
+        return null;
     }
 
     public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id) {
-        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepostsForSpeciTweet(id));
+//        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepostsForSpeciTweet(id));
         //can just get the tweet and iterate through its reposts
+
+        return null;
     }
 
     public List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id) {
-        return tweetMapper.entitiesToDtos(tweetRepository.getAllUsersMentionedInSpeciTweet(id));
+//        return tweetMapper.entitiesToDtos(tweetRepository.getAllUsersMentionedInSpeciTweet(id));
         //can just get the tweet, iterate through mentions in body
+
+        return null;
     }
 }
