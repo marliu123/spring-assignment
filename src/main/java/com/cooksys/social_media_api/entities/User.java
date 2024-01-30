@@ -2,10 +2,10 @@ package com.cooksys.social_media_api.entities;
 
 
 import com.cooksys.social_media_api.embeddables.Credentials;
+import com.cooksys.social_media_api.embeddables.Profile;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Profile;
 
 import java.sql.Timestamp;
 
