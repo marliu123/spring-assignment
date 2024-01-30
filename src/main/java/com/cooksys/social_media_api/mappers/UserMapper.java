@@ -19,5 +19,5 @@ public interface UserMapper {
 
 	User requestDtoToEntity(UserRequestDto entity);
 	
-	List<User> requestDtosToEntity(UserRequestDto entities);
+	List<User> requestDtosToEntities(List<UserRequestDto> entities);
 }
