@@ -6,6 +6,7 @@ import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.mappers.TweetMapper;
+import com.cooksys.social_media_api.repositories.TweetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
