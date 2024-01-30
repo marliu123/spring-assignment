@@ -9,16 +9,16 @@ import java.util.List;
 
 public interface TweetService {
 
-    public List<TweetResponseDto> getAllNonDeletedTweets();
-    public TweetResponseDto addNewTweet(TweetRequestDto tweet);
-    public TweetResponseDto getTweetById(Long id);
-    public TweetResponseDto deleteTweetById(Long id);
-    public TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet);
-    public TweetResponseDto repostTweetById(Long id);
-    public List<HashtagDto> getAllHashtagsForSpeciTweet(Long id);
-    public List<UserResponseDto> getAllUsersThatLikedSpeciTweet(Long id);
-    public List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id);
-    public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id);
-    public List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
+    List<TweetResponseDto> getAllNonDeletedTweets();
+    TweetResponseDto addNewTweet(TweetRequestDto tweet);
+    TweetResponseDto getTweetById(Long id);
+    TweetResponseDto deleteTweetById(Long id);
+    TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet);
+    TweetResponseDto repostTweetById(Long id);
+    List<HashtagDto> getAllHashtagsForSpeciTweet(Long id);
+    List<UserResponseDto> getAllUsersThatLikedSpeciTweet(Long id);
+    List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id);
+    List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id);
+    List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
 
 }
