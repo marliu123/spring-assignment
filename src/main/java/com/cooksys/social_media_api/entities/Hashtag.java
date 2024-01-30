@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -21,10 +23,12 @@ public class Hashtag {
     @Column(nullable = false)
     private String label;
 
-    @Column(nullable = false)
+    @Column(updatable = false)
+    @CreationTimestamp
     private Timestamp firstUsed; // final?
 
-    @Column(nullable = false)
+    @Column
+    @UpdateTimestamp
     private Timestamp lastUsed;
 
 
