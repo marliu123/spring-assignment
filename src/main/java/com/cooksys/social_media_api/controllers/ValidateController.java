@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/validate")
 public class ValidateController {
 
-    private ValidateService validateService;
+    private final ValidateService validateService;
 
     @GetMapping("/tag/exists/{label}")
     public boolean hashtagExists(@PathVariable String label){

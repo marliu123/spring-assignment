@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/tweets")
 public class TweetController {
 
-    private TweetService tweetService;
+    private final TweetService tweetService;
 
     @GetMapping
     public List<TweetResponseDto> getAllNonDeletedTweets() { return tweetService.getAllNonDeletedTweets(); }

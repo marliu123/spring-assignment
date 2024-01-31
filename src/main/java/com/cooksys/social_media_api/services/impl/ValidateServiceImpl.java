@@ -1,5 +1,6 @@
 package com.cooksys.social_media_api.services.impl;
 
+import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.repositories.HashtagRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
@@ -13,19 +14,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ValidateServiceImpl implements ValidateService {
 
-    private HashtagRepository hashtagRepository;
-    private UserRepository userRepository;
+    private final HashtagRepository hashtagRepository;
+    private final UserRepository userRepository;
 
     @Override
     public boolean hashtagExists(String label) {
-        return hashtagRepository.findByLabel(label) != null;
+//        if (label == null) {
+//            return false;
+//        }
+
+        List<Hashtag> allHashtags = hashtagRepository.findAll();
+        for (Hashtag h : allHashtags) {
+            if (h.getLabel().equals(label)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean usernameExists(String username) {
         List<User> allUsersWithDeleted = userRepository.findAll();
         for (User u : allUsersWithDeleted) {
-            if (u.getCredentials().getUsername() == username) {
+            if (u.getCredentials().getUsername().equals(username)) {
                 return true;
             }
         }
