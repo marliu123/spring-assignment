@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -34,12 +35,12 @@ public class Tweet {
     @OneToOne
     private Tweet repostOf;
 
-//    @OneToMany
-//    @JoinTable (
-//            name = "tweet_hashtags",
-//            joinColumns = @JoinColumn(name = "tweet_id"),
-//            inverseJoinColumns = @JoinColumn(name = "hashtag_id"))
-//    private List<Hashtag> hashtags;
+    @OneToMany
+    @JoinTable (
+            name = "tweet_hashtags",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id"))
+    private List<Hashtag> hashtags;
 
 
 }

@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@Table(name = "user_table")
 @NoArgsConstructor
 @Data
 public class User {
@@ -41,6 +42,20 @@ public class User {
             joinColumns = @JoinColumn(name = "following_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private List<User> followers;
+
+    @OneToMany
+    @JoinTable (
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> userLikes;
+
+    @OneToMany
+    @JoinTable (
+            name = "user_mentions",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> userMentions;
 
 
 

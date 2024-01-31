@@ -25,7 +25,7 @@ public class Hashtag {
 
     @Column(updatable = false)
     @CreationTimestamp
-    private Timestamp firstUsed; // final?
+    private Timestamp firstUsed;
 
     @Column
     @UpdateTimestamp
