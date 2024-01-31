@@ -1,10 +1,13 @@
 package com.cooksys.social_media_api.controllers;
 
 
+import com.cooksys.social_media_api.dtos.CredentialsDto;
+import com.cooksys.social_media_api.dtos.ProfileDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.services.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,20 +30,20 @@ public class UserController {
     public UserResponseDto getUserByUsername(@PathVariable String username) {return userService.getUserByUsername(username); }
 
     @PatchMapping("/{username}")
-    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user)
-    {return userService.updateUserByUsername(username, user);}
+    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials, @RequestBody ProfileDto profile)
+    {return userService.updateUserByUsername(username, credentials, profile);}
 
     @DeleteMapping("/{username}")
-    public UserResponseDto deleteUserByUsername(@PathVariable String username) {return userService.deleteUserByUsername(username);}
+    public UserResponseDto deleteUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {return userService.deleteUserByUsername(username);}
 
     @PostMapping("/{username}/follow")
     public void followUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-//        return userService.followUserByUsername(username, user);
+        return userService.followUserByUsername(username, user);
     }
 
     @PostMapping("/{username}/unfollow")
     public void unfollowUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-//        return userService.unfollowUserByUsername(username, user);
+        return userService.unfollowUserByUsername(username, user);
     }
 
     // this cascades and includes tweets/retweets by followers
