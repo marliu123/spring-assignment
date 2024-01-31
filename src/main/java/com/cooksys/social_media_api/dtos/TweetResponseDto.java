@@ -14,13 +14,13 @@ public class TweetResponseDto {
 
 	private int id;
 	
-	private User author;
+	private UserResponseDto author;
 	
 	private Timestamp posted;
 	
 	private String content;
 	
-	private Tweet inReplyTo;
+	private TweetResponseDto inReplyTo;
 	
-	private Tweet repostOf;
+	private TweetResponseDto repostOf;
 }

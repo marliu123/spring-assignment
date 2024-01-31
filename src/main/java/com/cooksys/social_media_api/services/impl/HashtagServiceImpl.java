@@ -17,7 +17,8 @@ public class HashtagServiceImpl implements HashtagService {
     private final HashtagMapper hashtagMapper;
 
     public List<HashtagDto> getAllHashtags() {
-        return hashtagMapper.entitiesToDtos(hashtagRepository.findAll());
+//        return hashtagMapper.entitiesToDtos(hashtagRepository.findAll());
+    	return null;
     }
 
     public List<TweetResponseDto> getAllTweetsByHashtag(String label) {

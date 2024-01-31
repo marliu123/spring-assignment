@@ -2,21 +2,17 @@ package com.cooksys.social_media_api.mappers;
 
 import java.util.List;
 
-import com.cooksys.social_media_api.dtos.ProfileDto;
-import com.cooksys.social_media_api.embeddables.Profile;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.entities.User;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.springframework.stereotype.Component;
 
-@Component
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ProfileMapper.class, CredentialsMapper.class})
+
 public interface UserMapper {
-
+    @Mapping(target = "username", source = "credentials.username")
 	UserResponseDto entityToDto(User entity);
 			
 	List<UserResponseDto> entitiesToDtos(List<User> entities);
