@@ -1,9 +1,9 @@
 package com.cooksys.social_media_api.services;
 
 public interface ValidateService {
-    boolean hashtagExists();
+    boolean hashtagExists(String label);
 
-    boolean usernameExists();
+    boolean usernameExists(String username);
 
-    boolean usernameAvailable();
+    boolean usernameAvailable(String username);
 }
