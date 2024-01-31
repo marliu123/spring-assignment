@@ -19,9 +19,6 @@ public class ValidateServiceImpl implements ValidateService {
 
     @Override
     public boolean hashtagExists(String label) {
-//        if (label == null) {
-//            return false;
-//        }
 
         List<Hashtag> allHashtags = hashtagRepository.findAll();
         for (Hashtag h : allHashtags) {
