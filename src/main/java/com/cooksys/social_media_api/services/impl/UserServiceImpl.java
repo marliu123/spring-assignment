@@ -5,9 +5,12 @@ import com.cooksys.social_media_api.dtos.ProfileDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.embeddables.Credentials;
 import com.cooksys.social_media_api.embeddables.Profile;
 import com.cooksys.social_media_api.entities.User;
+import com.cooksys.social_media_api.exceptions.BadRequestException;
 import com.cooksys.social_media_api.exceptions.NotFoundException;
+import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.ProfileMapper;
 import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.UserRepository;
@@ -24,6 +27,7 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 	private final UserRepository userRepository;
 	private final ProfileMapper profileMapper;
+	private final CredentialsMapper credentialsMapper;
 	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
@@ -70,13 +74,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void followUserByUsername(String username, UserRequestDto user) {
-
+    public void followUserByUsername(String username, CredentialsDto credentials) {
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	// user that is going to follow 
+    	User followerUser = userRepository.findByCredentials(credential);
+    	// user that is being followed
+    	User followingUser = userRepository.findByUsername(username);
+    	if(followerUser == null || followingUser == null) {
+            throw new NotFoundException("user not found");
+        }
+    	if(followingUser.getFollowers().contains(followerUser)) {
+    		throw new BadRequestException("This user is already following "+username);
+    	}
+    	// adding to the following / followed for each user
+    	followerUser.getFollowing().add(followingUser);
+    	followingUser.getFollowers().add(followerUser);
+    	
+    	userRepository.save(followerUser);
+    	userRepository.save(followingUser);
     }
 
     @Override
-    public void unfollowUserByUsername(String username, UserRequestDto user) {
-
+    public void unfollowUserByUsername(String username, CredentialsDto credentials) {
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	User followerUser = userRepository.findByCredentials(credential);
+    	User followingUser = userRepository.findByUsername(username);
+    	if(followerUser == null || followingUser == null) {
+            throw new NotFoundException("user not found");
+        }
+    	if(!followingUser.getFollowers().contains(followerUser)) {
+    		throw new BadRequestException("no preexisting relationship found");
+    	}
+    	followerUser.getFollowing().remove(followingUser);
+    	followingUser.getFollowers().remove(followerUser);
+    	userRepository.save(followerUser);
+    	userRepository.save(followingUser);
     }
 
     @Override

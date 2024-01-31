@@ -15,5 +15,7 @@ public interface CredentialsMapper {
 	CredentialsDto entityToDto(Credentials entity);
 			
 	List<CredentialsDto> entitiesToDtos(List<Credentials> entities);
+	
+	Credentials dtoToEntity(CredentialsDto credentialsDto);
 
 }

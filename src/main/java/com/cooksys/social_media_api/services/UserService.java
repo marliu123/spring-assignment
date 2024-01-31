@@ -20,9 +20,9 @@ public interface UserService {
 
     UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials);
 
-    void followUserByUsername(String username, UserRequestDto user);
+    void followUserByUsername(String username, CredentialsDto credentials);
 
-    void unfollowUserByUsername(String username, UserRequestDto user);
+    void unfollowUserByUsername(String username, CredentialsDto credentials);
 
     List<TweetResponseDto> getAllNonDeletedTweetsByUsername(String username);
 

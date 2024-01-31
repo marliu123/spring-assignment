@@ -6,6 +6,7 @@ import com.cooksys.social_media_api.dtos.ProfileDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.embeddables.Credentials;
 import com.cooksys.social_media_api.services.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,16 +35,16 @@ public class UserController {
     {return userService.updateUserByUsername(username, credentials, profile);}
 
     @DeleteMapping("/{username}")
-    public UserResponseDto deleteUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {return userService.deleteUserByUsername(username);}
+    public UserResponseDto deleteUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {return userService.deleteUserByUsername(username, credentials);}
 
     @PostMapping("/{username}/follow")
-    public void followUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-        return userService.followUserByUsername(username, user);
+    public void followUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {
+        userService.followUserByUsername(username, credentials);
     }
 
     @PostMapping("/{username}/unfollow")
-    public void unfollowUserByUsername(@PathVariable String username, @RequestBody UserRequestDto user) {
-        return userService.unfollowUserByUsername(username, user);
+    public void unfollowUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {
+        userService.unfollowUserByUsername(username, credentials);
     }
 
     // this cascades and includes tweets/retweets by followers
