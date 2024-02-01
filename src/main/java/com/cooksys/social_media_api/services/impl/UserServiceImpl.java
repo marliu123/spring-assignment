@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	
 	private List<String> getAllUsernames() {
         List<String> usernames = new ArrayList<>();
-        List<User> allUsers = userRepository.findAllByDeletedFalse();
+        List<User> allUsers = userRepository.findAll();
         
         for (User user : allUsers) {
             String username = user.getCredentials().getUsername();
@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
-    	getAllUsernames();
         return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
     	
     }
@@ -64,9 +63,9 @@ public class UserServiceImpl implements UserService {
    
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
+    	System.out.println(userRequestDto);
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
-    	// still needs editing
     	return userMapper.entityToDto(userRepository.saveAndFlush(user));
     	//return null;
     	
@@ -80,21 +79,19 @@ public class UserServiceImpl implements UserService {
     	if(user == null) {
     		throw new NotFoundException("User not found with username: "+username);
     	}
-    	
         return userMapper.entityToDto(user); 
     	//return null;
     }
 
     @Override
     public UserResponseDto updateUserByUsername(String username, ProfileDto profileDto) {
-    	 /* User user = userRepository.findByCredentialsUsername(username);
-    	Profile profile = profileMapper.dtoToEntity(profileDto);
+    	User user = userRepository.findByCredentialsUsername(username);
+    	System.out.println(user);
     	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
-    	user.setProfile(profile);
-    	return userMapper.entityToDto(userRepository.saveAndFlush(user)); */
-    	return null;
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user)); 
+    	//return null;
     }
 
     @Override
