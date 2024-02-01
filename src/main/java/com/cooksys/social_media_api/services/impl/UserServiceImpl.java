@@ -18,6 +18,7 @@ import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
 	private final ProfileMapper profileMapper;
 	private final CredentialsMapper credentialsMapper;
 	
+	
 	private User findUserByUsername(String username) {
 		List<User> allUsers = userRepository.findAll();
         for (User u : allUsers) {
@@ -39,8 +41,22 @@ public class UserServiceImpl implements UserService {
         return null;
 	}
 	
+	private List<String> getAllUsernames() {
+        List<String> usernames = new ArrayList<>();
+        List<User> allUsers = userRepository.findAllByDeletedFalse();
+        
+        for (User user : allUsers) {
+            String username = user.getCredentials().getUsername();
+            usernames.add(username);
+            System.out.println(username);
+        }
+        
+        return usernames;
+    }
+	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
+    	getAllUsernames();
         return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
     	
     }
@@ -48,18 +64,18 @@ public class UserServiceImpl implements UserService {
    
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
-    	/*User user = userMapper.requestDtoToEntity(userRequestDto);
+    	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
     	// still needs editing
-    	return userMapper.entityToDto(userRepository.saveAndFlush(user));*/
-    	return null;
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
+    	//return null;
     	
     }
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
 //		User user = findUserByUsername(username);
-    	User user = userRepository.findByCredentialsUsername(username);
+		User user = userRepository.findByCredentialsUsername(username);
     	System.out.println(user);
     	if(user == null) {
     		throw new NotFoundException("User not found with username: "+username);
@@ -70,26 +86,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updateUserByUsername(String username, CredentialsDto credentials, ProfileDto profile) {
-    	/*User user = userRepository.findByUsername(username);
-    	Profile savedProfile = profileMapper.dtoToEntity(profile);
-    	if(user == null || user.getCredentials().getUsername() != credentials.getUsername() || user.getCredentials().getPassword() != credentials.getPassword()) {
+    public UserResponseDto updateUserByUsername(String username, ProfileDto profileDto) {
+    	 /* User user = userRepository.findByCredentialsUsername(username);
+    	Profile profile = profileMapper.dtoToEntity(profileDto);
+    	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
-    	user.setProfile(savedProfile);
+    	user.setProfile(profile);
     	return userMapper.entityToDto(userRepository.saveAndFlush(user)); */
     	return null;
     }
 
     @Override
-    public UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials) {
-    	/*User user = userRepository.findByUsername(username);
-    	if(user == null || user.getCredentials().getUsername() != credentials.getUsername() || user.getCredentials().getPassword() != credentials.getPassword()) {
+    public UserResponseDto deleteUserByUsername(String username) {
+    	User user = userRepository.findByCredentialsUsername(username);
+    	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
     	user.setDeleted(true);
-    	//return userMapper.entityToDto(userRepository.saveAndFlush(user)); */
-    	return null;
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user)); 
+    	//return null;
     }
 
     @Override
