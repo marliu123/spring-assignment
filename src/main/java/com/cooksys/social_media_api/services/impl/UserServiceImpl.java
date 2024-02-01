@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService {
 	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
-//        return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
-    	return null;
+        return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
+//    	return null;
     }
 
     @Override
