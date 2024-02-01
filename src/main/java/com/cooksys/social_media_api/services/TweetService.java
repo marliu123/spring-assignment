@@ -4,6 +4,7 @@ import com.cooksys.social_media_api.dtos.HashtagDto;
 import com.cooksys.social_media_api.dtos.TweetRequestDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.entities.Hashtag;
 
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface TweetService {
     List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id);
     List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id);
     List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
+    List<TweetResponseDto> getTweetsByHashtag(Hashtag hashtag);
 
 }
