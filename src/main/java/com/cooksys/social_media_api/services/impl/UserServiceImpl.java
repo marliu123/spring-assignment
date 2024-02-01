@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         }
         return null;
 	}
-	
+
 	private List<String> getAllUsernames() {
         List<String> usernames = new ArrayList<>();
         List<User> allUsers = userRepository.findAll();
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
     	return userMapper.entityToDto(userRepository.saveAndFlush(user));
-    	//return null;
+    	//return null
     	
     }
 
@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserByUsername(String username) {
 //		User user = findUserByUsername(username);
 		User user = userRepository.findByCredentialsUsername(username);
-    	System.out.println(user);
     	if(user == null) {
     		throw new NotFoundException("User not found with username: "+username);
     	}
@@ -86,7 +85,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUserByUsername(String username, ProfileDto profileDto) {
     	User user = userRepository.findByCredentialsUsername(username);
-    	System.out.println(user);
     	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
@@ -107,11 +105,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void followUserByUsername(String username, CredentialsDto credentials) {
-    	/*Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
     	// user that is going to follow 
     	User followerUser = userRepository.findByCredentials(credential);
     	// user that is being followed
-    	User followingUser = userRepository.findByUsername(username);
+    	User followingUser = userRepository.findByCredentialsUsername(username);
     	if(followerUser == null || followingUser == null) {
             throw new NotFoundException("user not found");
         }
@@ -123,7 +121,7 @@ public class UserServiceImpl implements UserService {
     	followingUser.getFollowers().add(followerUser);
     	
     	userRepository.save(followerUser);
-    	userRepository.save(followingUser);*/
+    	userRepository.save(followingUser);
     }
 
     @Override
