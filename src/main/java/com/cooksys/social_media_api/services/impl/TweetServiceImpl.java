@@ -152,4 +152,9 @@ public class TweetServiceImpl implements TweetService {
         List<Tweet> tweetsWithHashtag = tweetRepository.findByHashtagsIsContaining(hashtag);
         return tweetMapper.entitiesToDtos(tweetsWithHashtag);
     }
+
+    public List<TweetResponseDto> getAllNonDeletedTweetsByUser(User user) {
+        List<Tweet> allNonDelByUser = tweetRepository.findByAuthorAndDeletedFalse(user);
+        return tweetMapper.entitiesToDtos(allNonDelByUser);
+    }
 }

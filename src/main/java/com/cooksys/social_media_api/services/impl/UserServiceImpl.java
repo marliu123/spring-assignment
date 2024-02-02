@@ -11,6 +11,7 @@ import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.ProfileMapper;
 import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.UserRepository;
+import com.cooksys.social_media_api.services.TweetService;
 import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final ProfileMapper profileMapper;
 	private final CredentialsMapper credentialsMapper;
+    private final TweetService tweetService;
 	
 	
 	private User findUserByUsername(String username) {
@@ -140,8 +142,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(String username) {
-    	//User user = userRepository.findByUsername(username);
-    	return null;
+    	User user = userRepository.findByCredentialsUsername(username);
+        List<TweetResponseDto> allUserNonDeletedTweets = tweetService.getAllNonDeletedTweetsByUser(user);
+    	return allUserNonDeletedTweets;
     }
 
     @Override
