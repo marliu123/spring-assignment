@@ -22,7 +22,7 @@ public class ValidateServiceImpl implements ValidateService {
 
         List<Hashtag> allHashtags = hashtagRepository.findAll();
         for (Hashtag h : allHashtags) {
-            if (h.getLabel() == label) {
+            if (h.getLabel().equals(label)) {
                 return true;
             }
         }
@@ -33,7 +33,7 @@ public class ValidateServiceImpl implements ValidateService {
     public boolean usernameExists(String username) {
         List<User> allUsersWithDeleted = userRepository.findAll();
         for (User u : allUsersWithDeleted) {
-            if (u.getCredentials().getUsername() == username) {
+            if (u.getCredentials().getUsername().equals(username)) {
                 return true;
             }
         }

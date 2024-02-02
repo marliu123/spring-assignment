@@ -1,13 +1,11 @@
 package com.cooksys.social_media_api.services.impl;
 
-import com.cooksys.social_media_api.dtos.HashtagDto;
-import com.cooksys.social_media_api.dtos.TweetRequestDto;
-import com.cooksys.social_media_api.dtos.TweetResponseDto;
-import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.dtos.*;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
+import com.cooksys.social_media_api.exceptions.NotAuthorizedException;
 import com.cooksys.social_media_api.exceptions.NotFoundException;
 import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
@@ -27,13 +25,6 @@ public class TweetServiceImpl implements TweetService {
     private final TweetMapper tweetMapper;
     private final UserRepository userRepository;
 
-    private Tweet getTweet(Long id) {
-        Optional<Tweet> tweet = tweetRepository.findById(id);
-        if (tweet.isEmpty()) {
-            throw new NotFoundException("No tweet with id: " + id);
-        }
-        return tweet.get();
-    }
 
     private void validateTweetRequestDto(TweetRequestDto tweetRequestDto) {
 
@@ -60,14 +51,23 @@ public class TweetServiceImpl implements TweetService {
         validateTweetRequestDto(tweetRequestDto);
 
         Tweet tweet = tweetMapper.requestDtoToEntity(tweetRequestDto);
+
         List<User> users = userRepository.findAllByDeletedFalse();
 
+
         for (User u : users) {
-            if (u.getCredentials().getUsername() == tweetRequestDto.getCredentials().getUsername()
-                    & u.getCredentials().getPassword() == tweetRequestDto.getCredentials().getPassword()) {
+            if (u.getCredentials().getUsername().equals(tweetRequestDto.getCredentials().getUsername())
+                    & u.getCredentials().getPassword().equals(tweetRequestDto.getCredentials().getPassword())) {
 
                 tweet.setAuthor(u);
+
+//                Matcher matcher = Pattern.compile("(@[^@\\s]*)")
+//                        .matcher(tweet.getContent());
+//                while (matcher.find()) {
+//                    h
+//                }
             }
+
         }
         return tweetMapper.entityToDto(tweetRepository.saveAndFlush(tweet));
     }
@@ -83,26 +83,25 @@ public class TweetServiceImpl implements TweetService {
 
 
 
-    public TweetResponseDto deleteTweetById(Long id) {
+    public TweetResponseDto deleteTweetById(Long id, CredentialsDto credentialsDto) {
 
-        Tweet tweetToDelete = getTweet(id);
+        Tweet tweetToDelete = tweetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid tweet ID: " + id));
 
-        List<User> users = userRepository.findAllByDeletedFalse();
-
-        for (User u : users) {
-            if (u.getCredentials() == tweetToDelete.getAuthor().getCredentials()
-            && u.getTweets().contains(tweetToDelete)) {
-
-                tweetToDelete.setDeleted(true);
-                tweetRepository.saveAllAndFlush(u.getTweets());
-            } else {
-                throw new BadRequestException("Not authorized or no tweet found at id: " + id);
-            }
-            userRepository.saveAllAndFlush(users);
+        if (tweetToDelete.isDeleted()) {
+            throw new NotFoundException("Tweet not found");
         }
 
+        if (!tweetToDelete.getAuthor().getCredentials().getUsername().equals(credentialsDto.getUsername())
+                || !tweetToDelete.getAuthor().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+            throw new NotAuthorizedException("Unauthorized to delete tweet with ID: " +id);
+        }
+
+        tweetToDelete.setDeleted(true);
+        tweetRepository.save(tweetToDelete);
+
         return tweetMapper.entityToDto(tweetToDelete);
-    }
+        }
+
 
     public void likeTweetById(Long id) {//add/send like to tweet by ID}
     }
