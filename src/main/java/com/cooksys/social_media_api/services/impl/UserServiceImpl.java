@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 
         return usernames;
     }
-
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
         return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
@@ -65,34 +64,64 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
+    	if(userRequestDto == null){
+            throw new BadRequestException("User request is null");
+        }
 
-        System.out.println(userRequestDto);
-        User user = userMapper.requestDtoToEntity(userRequestDto);
-        user.setDeleted(false);
-        return userMapper.entityToDto(userRepository.saveAndFlush(user));
-        //return null
+        CredentialsDto credentialsDto = userRequestDto.getCredentials();
+        ProfileDto profileDto = userRequestDto.getProfile();
 
+        if(credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null){
+            throw new BadRequestException("Credentials are invalid");
+        }
+
+        if(profileDto == null || profileDto.getEmail() == null){
+            throw new BadRequestException("Profile is invalid");
+        }
+
+        if(userRepository.findByCredentialsUsername(credentialsDto.getUsername()) != null){
+            throw new BadRequestException("User already exists");
+        }
+    	User user = userMapper.requestDtoToEntity(userRequestDto);
+    	user.setDeleted(false);
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
+    	
     }
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
 
-        User user = userRepository.findByCredentialsUsername(username);
-        if (user == null) {
-            throw new NotFoundException("User not found with username: " + username);
-        }
-        return userMapper.entityToDto(user);
-        //return null;
+		User user = userRepository.findByCredentialsUsername(username);
+    	if(user == null) {
+    		throw new NotFoundException("User not found with username: "+username);
+    	}
+        return userMapper.entityToDto(user); 
     }
 
     @Override
-    public UserResponseDto updateUserByUsername(String username, ProfileDto profileDto) {
-        User user = userRepository.findByCredentialsUsername(username);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-        return userMapper.entityToDto(userRepository.saveAndFlush(user));
-        //return null;
+    public UserResponseDto updateUserByUsername(String username, UserRequestDto userRequestDto) {
+    	User user = userRepository.findByCredentialsUsername(username);
+    	User user2 = userMapper.requestDtoToEntity(userRequestDto);
+    	if(user == null) {
+    		throw new NotFoundException("User not found");
+    	}
+    	if(user2.getCredentials() == null || user2.getProfile() == null || user2.getCredentials().getUsername() == null || user2.getCredentials().getPassword() == null) {
+    		throw new BadRequestException("Invalid");
+    	}
+    	if(user2.getProfile().getFirstName() != null) {
+    		user.getProfile().setFirstName(user2.getProfile().getFirstName());
+    	}
+    	if(user2.getProfile().getLastName() != null) {
+    		user.getProfile().setLastName(user2.getProfile().getLastName());
+    	}
+    	if(user2.getProfile().getPhone() != null) {
+    		user.getProfile().setPhone(user2.getProfile().getPhone());
+    	}
+    	if(user2.getProfile().getEmail() != null) {
+    		user.getProfile().setEmail(user2.getProfile().getEmail());
+    	}
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user);
+                                    
     }
 
     @Override
@@ -108,30 +137,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void followUserByUsername(String username, CredentialsDto credentials) {
-        Credentials credential = credentialsMapper.dtoToEntity(credentials);
-        // user that is going to follow
-        User followerUser = userRepository.findByCredentials(credential);
-        // user that is being followed
-        User followingUser = userRepository.findByCredentialsUsername(username);
-        if (followerUser == null || followingUser == null) {
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	// user that is going to follow 
+    	User followerUser = userRepository.findByCredentials(credential);
+    	System.out.println(credentials);
+    	// user that is being followed
+    	User followingUser = userRepository.findByCredentialsUsername(username);
+    	if(followerUser == null || followingUser == null) {
             throw new NotFoundException("user not found");
         }
-        if (followingUser.getFollowers().contains(followerUser)) {
-            throw new BadRequestException("This user is already following " + username);
-        }
-        // adding to the following / followed for each user
-        followerUser.getFollowing().add(followingUser);
-        followingUser.getFollowers().add(followerUser);
-
-        userRepository.save(followerUser);
-        userRepository.save(followingUser);
+    	if(followingUser.getFollowers().contains(followerUser)) {
+    		throw new BadRequestException("This user is already following "+username);
+    	}
+    	// adding to the following / followed for each user
+    	followerUser.getFollowing().add(followingUser);
+    	followingUser.getFollowers().add(followerUser);
+    	userRepository.saveAndFlush(followerUser);
+    	userRepository.saveAndFlush(followingUser);
     }
 
     @Override
     public void unfollowUserByUsername(String username, CredentialsDto credentials) {
-    	/*Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
     	User followerUser = userRepository.findByCredentials(credential);
-    	User followingUser = userRepository.findByUsername(username);
+    	User followingUser = userRepository.findByCredentialsUsername(username);
     	if(followerUser == null || followingUser == null) {
             throw new NotFoundException("user not found");
         }
@@ -140,8 +169,8 @@ public class UserServiceImpl implements UserService {
     	}
     	followerUser.getFollowing().remove(followingUser);
     	followingUser.getFollowers().remove(followerUser);
-    	userRepository.save(followerUser);
-    	userRepository.save(followingUser); */
+    	userRepository.saveAndFlush(followerUser);
+    	userRepository.saveAndFlush(followingUser); 
     }
 
     @Override

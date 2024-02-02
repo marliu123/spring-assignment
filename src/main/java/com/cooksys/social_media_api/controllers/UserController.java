@@ -27,22 +27,22 @@ public class UserController {
     @PostMapping
     public UserResponseDto addUser(@RequestBody UserRequestDto user) {return userService.addUser(user); }
 
-    @GetMapping("/{username}")
+    @GetMapping("/@{username}")
     public UserResponseDto getUserByUsername(@PathVariable String username) {return userService.getUserByUsername(username); }
 
-    @PatchMapping("/{username}")
-    public UserResponseDto updateUserByUsername(@PathVariable String username, ProfileDto profileDto)
-    {return userService.updateUserByUsername(username, profileDto);}
+    @PatchMapping("/@{username}")
+    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody UserRequestDto userRequestDto)
+    {return userService.updateUserByUsername(username, userRequestDto);}
 
-    @DeleteMapping("/{username}")
+    @DeleteMapping("/@{username}")
     public UserResponseDto deleteUserByUsername(@PathVariable String username) {return userService.deleteUserByUsername(username);}
 
-    @PostMapping("/{username}/follow")
+    @PostMapping("/@{username}/follow")
     public void followUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {
         userService.followUserByUsername(username, credentials);
     }
 
-    @PostMapping("/{username}/unfollow")
+    @PostMapping("/@{username}/unfollow")
     public void unfollowUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {
         userService.unfollowUserByUsername(username, credentials);
     }
