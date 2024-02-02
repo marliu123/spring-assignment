@@ -28,28 +28,6 @@ public class UserServiceImpl implements UserService {
 	private final CredentialsMapper credentialsMapper;
 	
 	
-	private User findUserByUsername(String username) {
-		List<User> allUsers = userRepository.findAll();
-        for (User u : allUsers) {
-            if (u.getCredentials().getUsername().equals(username)) {
-                return u;
-            } 
-        }
-        return null;
-	}
-
-	private List<String> getAllUsernames() {
-        List<String> usernames = new ArrayList<>();
-        List<User> allUsers = userRepository.findAll();
-        
-        for (User user : allUsers) {
-            String username = user.getCredentials().getUsername();
-            usernames.add(username);
-            System.out.println(username);
-        }
-        
-        return usernames;
-    }
 	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
@@ -59,9 +37,24 @@ public class UserServiceImpl implements UserService {
    
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
-    	if(userRequestDto.getProfile().getEmail() == null || userRequestDto.getCredentials().getPassword() == null || userRequestDto.getCredentials().getUsername() == null || userRequestDto.getProfile() == null) {
-    		throw new NotFoundException("Invalid");
-    	}
+    	if(userRequestDto == null){
+            throw new BadRequestException("User request is null");
+        }
+
+        CredentialsDto credentialsDto = userRequestDto.getCredentials();
+        ProfileDto profileDto = userRequestDto.getProfile();
+
+        if(credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null){
+            throw new BadRequestException("Credentials are invalid");
+        }
+
+        if(profileDto == null || profileDto.getEmail() == null){
+            throw new BadRequestException("Profile is invalid");
+        }
+
+        if(userRepository.findByCredentialsUsername(credentialsDto.getUsername()) != null){
+            throw new BadRequestException("User already exists");
+        }
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
     	return userMapper.entityToDto(userRepository.saveAndFlush(user));
@@ -78,16 +71,30 @@ public class UserServiceImpl implements UserService {
     		throw new NotFoundException("User not found with username: "+username);
     	}
         return userMapper.entityToDto(user); 
-    	//return null;
     }
 
     @Override
-    public UserResponseDto updateUserByUsername(String username, ProfileDto profileDto) {
+    public UserResponseDto updateUserByUsername(String username, UserRequestDto userRequestDto) {
     	User user = userRepository.findByCredentialsUsername(username);
+    	User user2 = userMapper.requestDtoToEntity(userRequestDto);
     	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
-    	user.setProfile(profileMapper.dtoToEntity(profileDto));
+    	if(user2.getCredentials() == null || user2.getProfile() == null || user2.getCredentials().getUsername() == null || user2.getCredentials().getPassword() == null) {
+    		throw new BadRequestException("Invalid");
+    	}
+    	if(user2.getProfile().getFirstName() != null) {
+    		user.getProfile().setFirstName(user2.getProfile().getFirstName());
+    	}
+    	if(user2.getProfile().getLastName() != null) {
+    		user.getProfile().setLastName(user2.getProfile().getLastName());
+    	}
+    	if(user2.getProfile().getPhone() != null) {
+    		user.getProfile().setPhone(user2.getProfile().getPhone());
+    	}
+    	if(user2.getProfile().getEmail() != null) {
+    		user.getProfile().setEmail(user2.getProfile().getEmail());
+    	}
     	return userMapper.entityToDto(userRepository.saveAndFlush(user)); 
     }
 

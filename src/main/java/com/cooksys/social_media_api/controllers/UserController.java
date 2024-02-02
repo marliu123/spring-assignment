@@ -31,8 +31,8 @@ public class UserController {
     public UserResponseDto getUserByUsername(@PathVariable String username) {return userService.getUserByUsername(username); }
 
     @PatchMapping("/@{username}")
-    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody ProfileDto profileDto)
-    {return userService.updateUserByUsername(username, profileDto);}
+    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody UserRequestDto userRequestDto)
+    {return userService.updateUserByUsername(username, userRequestDto);}
 
     @DeleteMapping("/@{username}")
     public UserResponseDto deleteUserByUsername(@PathVariable String username) {return userService.deleteUserByUsername(username);}
