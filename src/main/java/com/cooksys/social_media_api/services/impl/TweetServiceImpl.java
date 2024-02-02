@@ -1,9 +1,6 @@
 package com.cooksys.social_media_api.services.impl;
 
-import com.cooksys.social_media_api.dtos.HashtagDto;
-import com.cooksys.social_media_api.dtos.TweetRequestDto;
-import com.cooksys.social_media_api.dtos.TweetResponseDto;
-import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.dtos.*;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
@@ -13,6 +10,7 @@ import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.TweetService;
+import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,7 @@ public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
     private final TweetMapper tweetMapper;
+    private final UserService userService;
     private final UserRepository userRepository;
 
     private Tweet getTweet(Long id) {
@@ -104,7 +103,15 @@ public class TweetServiceImpl implements TweetService {
         return tweetMapper.entityToDto(tweetToDelete);
     }
 
-    public void likeTweetById(Long id) {//add/send like to tweet by ID}
+    public void likeTweetById(CredentialsDto userCredentials, Long id) {
+        User userToLike = userService.validateUserCredentials(userCredentials);
+        List<Tweet> usersLikedTweets = userToLike.getLikedTweets();
+        Optional<Tweet> tweetToLike = tweetRepository.findById(id);
+        if (tweetToLike.isPresent()) {
+            usersLikedTweets.add(tweetToLike.get());
+            userToLike.setLikedTweets(usersLikedTweets);
+            userService.updateUserLikedTweets(userToLike);
+        }
     }
 
     public TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet) {

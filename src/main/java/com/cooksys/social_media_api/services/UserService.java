@@ -6,6 +6,7 @@ import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.embeddables.Credentials;
+import com.cooksys.social_media_api.entities.User;
 
 import java.util.List;
 
@@ -31,4 +32,7 @@ public interface UserService {
     List<UserResponseDto> getAllActiveFollowersOfUser(String username);
 
     List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing(String username);
+
+    User validateUserCredentials(CredentialsDto userCredentials);
+    void updateUserLikedTweets(User user);
 }

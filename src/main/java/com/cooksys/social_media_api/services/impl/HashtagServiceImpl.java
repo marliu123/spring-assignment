@@ -5,6 +5,7 @@ import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.mappers.HashtagMapper;
+import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.repositories.HashtagRepository;
 import com.cooksys.social_media_api.services.HashtagService;
 import com.cooksys.social_media_api.services.TweetService;
@@ -18,7 +19,7 @@ import java.util.List;
 public class HashtagServiceImpl implements HashtagService {
     private final HashtagRepository hashtagRepository;
     private final HashtagMapper hashtagMapper;
-    private final TweetService tweetService;
+    private final TweetMapper tweetMapper;
 
     public List<HashtagDto> getAllHashtags() {
         return hashtagMapper.entitiesToDtos(hashtagRepository.findAll());
@@ -26,7 +27,6 @@ public class HashtagServiceImpl implements HashtagService {
 
     public List<TweetResponseDto> getAllTweetsByHashtag(String label) {
         Hashtag hashtag = hashtagRepository.findByLabel("#" + label);
-        List<TweetResponseDto> tweetsWithHashtag = tweetService.getTweetsByHashtag(hashtag);
-        return tweetsWithHashtag;
+        return tweetMapper.entitiesToDtos(hashtag.getTweets());
     }
 }
