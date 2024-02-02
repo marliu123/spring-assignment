@@ -4,6 +4,7 @@ import com.cooksys.social_media_api.dtos.HashtagDto;
 import com.cooksys.social_media_api.dtos.TweetRequestDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
+import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
@@ -145,5 +146,10 @@ public class TweetServiceImpl implements TweetService {
         //can just get the tweet, iterate through mentions in body
 
         return null;
+    }
+
+    public List<TweetResponseDto> getTweetsByHashtag(Hashtag hashtag) {
+        List<Tweet> tweetsWithHashtag = tweetRepository.findByHashtagsIsContaining(hashtag);
+        return tweetMapper.entitiesToDtos(tweetsWithHashtag);
     }
 }
