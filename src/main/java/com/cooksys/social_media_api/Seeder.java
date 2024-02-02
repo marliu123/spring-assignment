@@ -280,4 +280,3 @@ public class Seeder implements CommandLineRunner {
         userRepository.saveAndFlush(user1);
     }
 }
-

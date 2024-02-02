@@ -2,13 +2,10 @@ package com.cooksys.social_media_api.controllers;
 
 
 import com.cooksys.social_media_api.dtos.CredentialsDto;
-import com.cooksys.social_media_api.dtos.ProfileDto;
 import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserRequestDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
-import com.cooksys.social_media_api.embeddables.Credentials;
 import com.cooksys.social_media_api.services.UserService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,26 +44,22 @@ public class UserController {
         userService.unfollowUserByUsername(username, credentials);
     }
 
-    // this cascades and includes tweets/retweets by followers
-//    @GetMapping("/{username}/feed")
-//    public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(@PathVariable String username) {
-//        return userService.getAllNonDeletedTweetsByUsername(username);
-//    }
-
-    @GetMapping("/{username}/tweets")
-    public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(@PathVariable String username) {
-        return userService.getAllNonDeletedTweetsByUsername(username); }
+    @GetMapping("/{username}/feed")
+    public List<TweetResponseDto> getFeed(@PathVariable String username) {
+        return userService.getFeed(username); }
 
     @GetMapping("/{username}/mentions")
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(@PathVariable String username) {
         return userService.getAllTweetsUserIsMentionedIn(username);
     }
 
+    // me
     @GetMapping("/{username}/followers")
     public List<UserResponseDto> getAllActiveFollowersOfUser(@PathVariable String username) {
         return userService.getAllActiveFollowersOfUser(username);
     }
 
+    //me
     @GetMapping("/{username}/following")
     public List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing (@PathVariable String username) {
         return userService.getAllActiveUsersThatAUserIsFollowing(username);
