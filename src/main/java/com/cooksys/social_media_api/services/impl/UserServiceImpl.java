@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getFeed(String username) {
-        User user = userRepository.findByCredentialsUsername(username);
+        User user = userRepository.findByCredentialsUsername(username.substring(1));
 
         // user is always null in tests -- why?
 
@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
-        User user = userRepository.findByCredentialsUsername(username);
+        User user = userRepository.findByCredentialsUsername(username.substring(1));
 
         if (user == null || user.isDeleted()) {
             throw new NotFoundException("user is null or account inactive");
