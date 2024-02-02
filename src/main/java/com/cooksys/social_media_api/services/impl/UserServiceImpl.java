@@ -59,12 +59,14 @@ public class UserServiceImpl implements UserService {
    
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
-      
-    	System.out.println(userRequestDto);
+    	if(userRequestDto.getProfile().getEmail() == null || userRequestDto.getCredentials().getPassword() == null || userRequestDto.getCredentials().getUsername() == null || userRequestDto.getProfile() == null) {
+    		throw new NotFoundException("Invalid");
+    	}
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
     	return userMapper.entityToDto(userRepository.saveAndFlush(user));
     	//return null
+    	
     	
     }
 
@@ -85,8 +87,8 @@ public class UserServiceImpl implements UserService {
     	if(user == null) {
     		throw new NotFoundException("User not found");
     	}
+    	user.setProfile(profileMapper.dtoToEntity(profileDto));
     	return userMapper.entityToDto(userRepository.saveAndFlush(user)); 
-    	//return null;
     }
 
     @Override
@@ -105,6 +107,7 @@ public class UserServiceImpl implements UserService {
     	Credentials credential = credentialsMapper.dtoToEntity(credentials);
     	// user that is going to follow 
     	User followerUser = userRepository.findByCredentials(credential);
+    	System.out.println(credentials);
     	// user that is being followed
     	User followingUser = userRepository.findByCredentialsUsername(username);
     	if(followerUser == null || followingUser == null) {
@@ -113,12 +116,14 @@ public class UserServiceImpl implements UserService {
     	if(followingUser.getFollowers().contains(followerUser)) {
     		throw new BadRequestException("This user is already following "+username);
     	}
+    	System.out.println(followerUser.getFollowing().size());
     	// adding to the following / followed for each user
     	followerUser.getFollowing().add(followingUser);
     	followingUser.getFollowers().add(followerUser);
-    	
-    	userRepository.save(followerUser);
-    	userRepository.save(followingUser);
+    	userRepository.saveAndFlush(followerUser);
+    	userRepository.saveAndFlush(followingUser);
+    	System.out.println("Successfully followed user: " + username);
+    	System.out.println(followerUser.getFollowing().size());
     }
 
     @Override
