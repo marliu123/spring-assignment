@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
         }
 
         CredentialsDto credentialsDto = userRequestDto.getCredentials();
+
         ProfileDto profileDto = userRequestDto.getProfile();
 
         if(credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null){
@@ -171,6 +172,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(String username) {
         User user = userRepository.findByCredentialsUsername(username);
+
+        // user is null, cannot invoke user.getTweets(); //
+
         List<Tweet> userTweets = user.getTweets();
         List<Tweet> nonDelTweets = new ArrayList<>();
         for (Tweet tweet : userTweets) {
@@ -187,6 +191,9 @@ public class UserServiceImpl implements UserService {
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
         User user = userRepository.findByCredentialsUsername(username);
         List<Tweet> tweetsUserMentionedIn = user.getMentionedTweets();
+
+        // user is null, cannot invoke user.getMentionedTweets(); //
+
         List<Tweet> nonDelTweets = new ArrayList<>();
         for (Tweet tweet : tweetsUserMentionedIn) {
             if (!tweet.isDeleted()) {

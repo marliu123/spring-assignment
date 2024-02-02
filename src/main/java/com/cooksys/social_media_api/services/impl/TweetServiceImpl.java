@@ -38,7 +38,8 @@ public class TweetServiceImpl implements TweetService {
 
     private void validateTweetRequestDto(TweetRequestDto tweetRequestDto) {
 
-        if (tweetRequestDto.getCredentials().getUsername() == null
+        if (tweetRequestDto.getCredentials() == null
+                || tweetRequestDto.getCredentials().getUsername() == null
                 || tweetRequestDto.getCredentials().getPassword() == null) {
             throw new BadRequestException("Not authorized");
         }
