@@ -20,17 +20,16 @@ public class ValidateServiceImpl implements ValidateService {
     @Override
     public boolean hashtagExists(String label) {
 
-
         if (hashtagRepository.findByLabel("#" + label) != null) {
             return true;
         }
-
         return false;
 
     }
 
     @Override
     public boolean usernameExists(String username) {
+
         String userName = username.substring(1);
         User user = userRepository.findByCredentialsUsername(userName);
         if (user != null) {
