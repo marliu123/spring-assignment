@@ -158,8 +158,21 @@ public class TweetServiceImpl implements TweetService {
         return null;
     }
 
-    public TweetResponseDto repostTweetById(Long id) {
-//        return tweetMapper.entityToDto(tweetRepository.repostTweetById(id));
+    public TweetResponseDto repostTweetById(CredentialsDto userCredentials, Long id) {
+        User userToRepost = userService.validateUserCredentials(userCredentials);
+        Optional<Tweet> tweetToRepost = tweetRepository.findById(id);
+        if (tweetToRepost.isPresent()) {
+            Tweet repostedTweet = new Tweet();
+            repostedTweet.setAuthor(userToRepost);
+            repostedTweet.setDeleted(false);
+            repostedTweet.setContent(tweetToRepost.get().getContent());
+            repostedTweet.setReplies(tweetToRepost.get().getReplies());
+            repostedTweet.setInReplyTo(tweetToRepost.get());
+            repostedTweet.setRepostOf(tweetToRepost.get());
+            repostedTweet.setHashtags(tweetToRepost.get().getHashtags());
+            repostedTweet.setLikedByUsers(tweetToRepost.get().getLikedByUsers());
+            repostedTweet.setMentionedUsers(tweetToRepost.get().getMentionedUsers());
+        }
         return null;
     }
 
