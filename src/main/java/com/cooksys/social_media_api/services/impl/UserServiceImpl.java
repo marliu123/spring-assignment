@@ -1,15 +1,12 @@
 package com.cooksys.social_media_api.services.impl;
 
-import com.cooksys.social_media_api.dtos.CredentialsDto;
-import com.cooksys.social_media_api.dtos.ProfileDto;
-import com.cooksys.social_media_api.dtos.TweetResponseDto;
-import com.cooksys.social_media_api.dtos.UserRequestDto;
-import com.cooksys.social_media_api.dtos.UserResponseDto;
+
 import com.cooksys.social_media_api.embeddables.Credentials;
 import com.cooksys.social_media_api.embeddables.Profile;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
 import com.cooksys.social_media_api.exceptions.NotFoundException;
+import com.cooksys.social_media_api.dtos.*;
 import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.ProfileMapper;
 import com.cooksys.social_media_api.mappers.UserMapper;
@@ -17,9 +14,8 @@ import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -57,12 +53,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
         return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
-    	
     }
     
    
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
+      
     	System.out.println(userRequestDto);
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
@@ -73,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
-//		User user = findUserByUsername(username);
+
 		User user = userRepository.findByCredentialsUsername(username);
     	if(user == null) {
     		throw new NotFoundException("User not found with username: "+username);

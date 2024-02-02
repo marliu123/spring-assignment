@@ -1,33 +1,24 @@
 package com.cooksys.social_media_api.entities;
 
 
+import com.cooksys.social_media_api.embeddables.Credentials;
+import com.cooksys.social_media_api.embeddables.Profile;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.cooksys.social_media_api.embeddables.Credentials;
-import com.cooksys.social_media_api.embeddables.Profile;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_table")
 @NoArgsConstructor
 @Data
 public class User {
+
+    // new endpoints branch commit - Scott
 
 	@Id
     @GeneratedValue
