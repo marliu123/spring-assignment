@@ -149,7 +149,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
-        return null;
+        User user = userRepository.findByCredentialsUsername(username);
+        List<TweetResponseDto> tweetsUserMentionedIn = tweetService.getAllTweetsUserIsMentionedIn(user);
+        return tweetsUserMentionedIn;
     }
 
     @Override

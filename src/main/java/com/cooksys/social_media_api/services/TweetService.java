@@ -26,5 +26,6 @@ public interface TweetService {
     List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
     List<TweetResponseDto> getTweetsByHashtag(Hashtag hashtag);
     List<TweetResponseDto> getAllNonDeletedTweetsByUser(User user);
+    List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user);
 
 }

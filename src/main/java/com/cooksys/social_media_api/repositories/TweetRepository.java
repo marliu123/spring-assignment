@@ -17,4 +17,6 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
 
     List<Tweet> findByAuthorAndDeletedFalse(User user);
 
+    List<Tweet> findByDeletedFalseAndMentionedUsersContaining(User user);
+
 }

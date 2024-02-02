@@ -157,4 +157,9 @@ public class TweetServiceImpl implements TweetService {
         List<Tweet> allNonDelByUser = tweetRepository.findByAuthorAndDeletedFalse(user);
         return tweetMapper.entitiesToDtos(allNonDelByUser);
     }
+
+    public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user) {
+        List<Tweet> tweetsUserIsMentionedIn = tweetRepository.findByDeletedFalseAndMentionedUsersContaining(user);
+        return tweetMapper.entitiesToDtos(tweetsUserIsMentionedIn);
+    }
 }
