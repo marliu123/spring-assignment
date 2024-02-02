@@ -181,9 +181,10 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id) {
-//        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepostsForSpeciTweet(id));
-        //can just get the tweet and iterate through its reposts
-
+        Optional<Tweet> tweet = tweetRepository.findById(id);
+        if (tweet.isPresent()) {
+            return tweetMapper.entitiesToDtos( tweet.get().getReposts());
+        }
         return null;
     }
 
