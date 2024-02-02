@@ -6,6 +6,7 @@ import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.dtos.*;
+import com.cooksys.social_media_api.entities.User;
 
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface TweetService {
     List<TweetResponseDto> getAllNonDeletedTweets();
     TweetResponseDto addNewTweet(TweetRequestDto tweetRequestDto);
     TweetResponseDto getTweetById(Long id);
-    TweetResponseDto deleteTweetById(Long id);
+    TweetResponseDto deleteTweetById(Long id, CredentialsDto credentialsDto);
     TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet);
     TweetResponseDto repostTweetById(Long id);
     List<HashtagDto> getAllHashtagsForSpeciTweet(Long id);
@@ -24,5 +25,8 @@ public interface TweetService {
     List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id);
     List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id);
     List<TweetResponseDto> getTweetsByHashtag(Hashtag hashtag);
+    List<TweetResponseDto> getAllNonDeletedTweetsByUser(User user);
+    List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user);
+    void likeTweetById(CredentialsDto userCredentials, Long id);
 
 }
