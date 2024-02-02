@@ -170,29 +170,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(String username) {
+    public List<TweetResponseDto> getFeed(String username) {
         User user = userRepository.findByCredentialsUsername(username);
 
-        // user is null, cannot invoke user.getTweets(); //
+        // user is always null in tests -- why?
+
+        if (user == null || user.isDeleted()) {
+            throw new NotFoundException("user is null or account inactive");
+        }
 
         List<Tweet> userTweets = user.getTweets();
+
         List<Tweet> nonDelTweets = new ArrayList<>();
+
         for (Tweet tweet : userTweets) {
             if (!tweet.isDeleted()) {
                 nonDelTweets.add(tweet);
             }
         }
         return tweetMapper.entitiesToDtos(nonDelTweets);
-//        List<TweetResponseDto> allUserNonDeletedTweets = tweetService.getAllNonDeletedTweetsByUser(user);
-//        return allUserNonDeletedTweets;
+
     }
+
 
     @Override
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
         User user = userRepository.findByCredentialsUsername(username);
-        List<Tweet> tweetsUserMentionedIn = user.getMentionedTweets();
 
-        // user is null, cannot invoke user.getMentionedTweets(); //
+        if (user == null || user.isDeleted()) {
+            throw new NotFoundException("user is null or account inactive");
+        }
+
+        List<Tweet> tweetsUserMentionedIn = user.getMentionedTweets();
 
         List<Tweet> nonDelTweets = new ArrayList<>();
         for (Tweet tweet : tweetsUserMentionedIn) {
@@ -208,12 +217,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllActiveFollowersOfUser(String username) {
-        return null;
+        User user = userRepository.findByCredentialsUsername(username);
+
+        // user is always null in tests -- why?
+
+        if (user == null || user.isDeleted()) {
+            throw new NotFoundException("user is null or account inactive");
+        }
+        List<User> activeFollowers = user.getFollowers();
+
+        activeFollowers.removeIf(User::isDeleted);
+
+        return userMapper.entitiesToDtos(activeFollowers);
+
     }
 
     @Override
     public List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing(String username) {
-        return null;
+        User user = userRepository.findByCredentialsUsername(username);
+
+        // user is always null in tests -- why?
+
+        if (user == null || user.isDeleted()) {
+            throw new NotFoundException("user is null or account inactive");
+        }
+
+        List<User> activeUsersFollowed = user.getFollowing();
+
+        activeUsersFollowed.removeIf(User::isDeleted);
+
+        return userMapper.entitiesToDtos(activeUsersFollowed);
     }
 
     public User validateUserCredentials(CredentialsDto userCredentials) {
