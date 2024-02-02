@@ -1,22 +1,15 @@
 package com.cooksys.social_media_api.services.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.cooksys.social_media_api.dtos.CredentialsDto;
-import com.cooksys.social_media_api.dtos.ProfileDto;
-import com.cooksys.social_media_api.dtos.TweetResponseDto;
-import com.cooksys.social_media_api.dtos.UserRequestDto;
-import com.cooksys.social_media_api.dtos.UserResponseDto;
-import com.cooksys.social_media_api.entities.User;
+import com.cooksys.social_media_api.dtos.*;
 import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.ProfileMapper;
 import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,16 +22,17 @@ public class UserServiceImpl implements UserService {
 	
     @Override
     public List<UserResponseDto> getAllNonDeletedUsers() {
-//        return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
-    	return null;
+        return userMapper.entitiesToDtos(userRepository.findAllByDeletedFalse());
+//    	return null;
     }
 
     @Override
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
-    	User user = userMapper.requestDtoToEntity(userRequestDto);
-    	user.setDeleted(false);
-    	// still needs editing
-    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
+//    	User user = userMapper.requestDtoToEntity(userRequestDto);
+//    	user.setDeleted(false);
+//    	 still needs editing
+//    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
+        return null;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class UserServiceImpl implements UserService {
 //    	if(user == null) {
 //    		throw new NotFoundException("User not found with username: "+username);
 //    	}
-//    	
+//
 //        return userMapper.entityToDto(user);
     	return null;
     }
