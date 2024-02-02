@@ -33,8 +33,8 @@ public class TweetController {
     }
 
     @DeleteMapping("/{id}")
-    public TweetResponseDto deleteTweetById(@PathVariable Long id) {
-        return tweetService.deleteTweetById(id);
+    public TweetResponseDto deleteTweetById(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.deleteTweetById(id, credentialsDto);
     }
 
     @PostMapping("/{id}/like")
