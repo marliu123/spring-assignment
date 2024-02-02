@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing(String username) {
-        User user = userRepository.findByCredentialsUsername(username);
+        User user = userRepository.findByCredentialsUsername(username.substring(1));
 
         // user is always null in tests -- why?
 
