@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     	if(user2.getProfile().getEmail() != null) {
     		user.getProfile().setEmail(user2.getProfile().getEmail());
     	}
-    	return userMapper.entityToDto(userRepository.saveAndFlush(user);
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
                                     
     }
 

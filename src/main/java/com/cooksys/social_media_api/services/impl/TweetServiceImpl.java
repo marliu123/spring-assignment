@@ -7,7 +7,9 @@ import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
 import com.cooksys.social_media_api.exceptions.NotAuthorizedException;
 import com.cooksys.social_media_api.exceptions.NotFoundException;
+import com.cooksys.social_media_api.mappers.HashtagMapper;
 import com.cooksys.social_media_api.mappers.TweetMapper;
+import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.TweetService;
@@ -15,6 +17,7 @@ import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +29,8 @@ public class TweetServiceImpl implements TweetService {
     private final TweetMapper tweetMapper;
     private final UserService userService;
     private final UserRepository userRepository;
-
+    private final UserMapper userMapper;
+    private final HashtagMapper hashtagMapper;
 
     private void validateTweetRequestDto(TweetRequestDto tweetRequestDto) {
 
@@ -127,20 +131,30 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public List<HashtagDto> getAllHashtagsForSpeciTweet(Long id) {
-        // return get all from hashtag service or repo?
-        return null;
+    	if(tweetRepository.findById(id) == null) {
+    		throw new NotFoundException("no tweet with id "+id);
+    	}
+    	Optional<Tweet> tweet = tweetRepository.findById(id);
+    	List<Hashtag> list = tweet.get().getHashtags();
+        return hashtagMapper.entitiesToDtos(list); 
     }
 
     public List<UserResponseDto> getAllUsersThatLikedSpeciTweet(Long id) {
-        //return get all from user service or repo?
-        return null;
+    	if(tweetRepository.findById(id) == null) {
+    		throw new NotFoundException("no tweet with id "+id);
+    	}
+    	Optional<Tweet> tweet = tweetRepository.findById(id);
+    	List<User> list = tweet.get().getLikedByUsers();
+        return userMapper.entitiesToDtos(list); 
     }
 
     public List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id) {
-//        return tweetMapper.entitiesToDtos(tweetRepository.getAllRepliesForSpeciTweet(id));
-        //can just get the tweet and iterate through its replies
-
-        return null;
+    	if(tweetRepository.findById(id) == null) {
+    		throw new NotFoundException("no tweet with id "+id);
+    	}
+    	Optional<Tweet> tweet = tweetRepository.findById(id);
+    	List<Tweet> list = tweet.get().getReplies();
+    	return tweetMapper.entitiesToDtos(list); 
     }
 
     public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id) {
