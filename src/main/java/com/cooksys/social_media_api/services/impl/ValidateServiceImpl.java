@@ -20,23 +20,22 @@ public class ValidateServiceImpl implements ValidateService {
     @Override
     public boolean hashtagExists(String label) {
 
-        List<Hashtag> allHashtags = hashtagRepository.findAll();
-        for (Hashtag h : allHashtags) {
-            if (h.getLabel().equals(label.substring(1))) {
-                return true;
-            }
+        if (hashtagRepository.findByLabel("#" + label) != null) {
+            return true;
         }
         return false;
+
     }
 
     @Override
     public boolean usernameExists(String username) {
-        List<User> allUsersWithDeleted = userRepository.findAll();
-        for (User u : allUsersWithDeleted) {
-            if (u.getCredentials().getUsername().equals(username.substring(1))) {
-                return true;
-            }
+
+        String userName = username.substring(1);
+        User user = userRepository.findByCredentialsUsername(userName);
+        if (user != null) {
+            return true;
         }
+
         return false;
     }
 
