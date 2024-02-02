@@ -31,11 +31,11 @@ public class UserController {
     public UserResponseDto getUserByUsername(@PathVariable String username) {return userService.getUserByUsername(username); }
 
     @PatchMapping("/{username}")
-    public UserResponseDto updateUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials, @RequestBody ProfileDto profile)
-    {return userService.updateUserByUsername(username, credentials, profile);}
+    public UserResponseDto updateUserByUsername(@PathVariable String username, ProfileDto profileDto)
+    {return userService.updateUserByUsername(username, profileDto);}
 
     @DeleteMapping("/{username}")
-    public UserResponseDto deleteUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {return userService.deleteUserByUsername(username, credentials);}
+    public UserResponseDto deleteUserByUsername(@PathVariable String username) {return userService.deleteUserByUsername(username);}
 
     @PostMapping("/{username}/follow")
     public void followUserByUsername(@PathVariable String username, @RequestBody CredentialsDto credentials) {
