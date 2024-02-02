@@ -116,21 +116,18 @@ public class UserServiceImpl implements UserService {
     	if(followingUser.getFollowers().contains(followerUser)) {
     		throw new BadRequestException("This user is already following "+username);
     	}
-    	System.out.println(followerUser.getFollowing().size());
     	// adding to the following / followed for each user
     	followerUser.getFollowing().add(followingUser);
     	followingUser.getFollowers().add(followerUser);
     	userRepository.saveAndFlush(followerUser);
     	userRepository.saveAndFlush(followingUser);
-    	System.out.println("Successfully followed user: " + username);
-    	System.out.println(followerUser.getFollowing().size());
     }
 
     @Override
     public void unfollowUserByUsername(String username, CredentialsDto credentials) {
-    	/*Credentials credential = credentialsMapper.dtoToEntity(credentials);
+    	Credentials credential = credentialsMapper.dtoToEntity(credentials);
     	User followerUser = userRepository.findByCredentials(credential);
-    	User followingUser = userRepository.findByUsername(username);
+    	User followingUser = userRepository.findByCredentialsUsername(username);
     	if(followerUser == null || followingUser == null) {
             throw new NotFoundException("user not found");
         }
@@ -139,8 +136,8 @@ public class UserServiceImpl implements UserService {
     	}
     	followerUser.getFollowing().remove(followingUser);
     	followingUser.getFollowers().remove(followerUser);
-    	userRepository.save(followerUser);
-    	userRepository.save(followingUser); */
+    	userRepository.saveAndFlush(followerUser);
+    	userRepository.saveAndFlush(followingUser); 
     }
 
     @Override
