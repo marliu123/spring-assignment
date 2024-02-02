@@ -22,7 +22,7 @@ public class ValidateServiceImpl implements ValidateService {
 
         List<Hashtag> allHashtags = hashtagRepository.findAll();
         for (Hashtag h : allHashtags) {
-            if (h.getLabel() == label) {
+            if (h.getLabel().equals("#" + label)) {
                 return true;
             }
         }
