@@ -1,13 +1,16 @@
 package com.cooksys.social_media_api.services.impl;
 
 import com.cooksys.social_media_api.dtos.*;
+import com.cooksys.social_media_api.embeddables.Credentials;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
 import com.cooksys.social_media_api.exceptions.NotAuthorizedException;
 import com.cooksys.social_media_api.exceptions.NotFoundException;
+import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.TweetMapper;
+import com.cooksys.social_media_api.repositories.HashtagRepository;
 import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
@@ -16,6 +19,7 @@ import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +28,9 @@ import java.util.Optional;
 public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
+    private final HashtagRepository hashtagRepository;
     private final TweetMapper tweetMapper;
+    private final CredentialsMapper credentialsMapper;
     private final UserService userService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -32,8 +38,7 @@ public class TweetServiceImpl implements TweetService {
 
     private void validateTweetRequestDto(TweetRequestDto tweetRequestDto) {
 
-        if (tweetRequestDto.getCredentials() == null
-                || tweetRequestDto.getCredentials().getUsername() == null
+        if (tweetRequestDto.getCredentials().getUsername() == null
                 || tweetRequestDto.getCredentials().getPassword() == null) {
             throw new BadRequestException("Not authorized");
         }
@@ -52,28 +57,57 @@ public class TweetServiceImpl implements TweetService {
 
 
     public TweetResponseDto addNewTweet(TweetRequestDto tweetRequestDto) {
+
         validateTweetRequestDto(tweetRequestDto);
 
         Tweet tweet = tweetMapper.requestDtoToEntity(tweetRequestDto);
 
-        List<User> users = userRepository.findAllByDeletedFalse();
+        Credentials credentials = credentialsMapper.dtoToEntity(tweetRequestDto.getCredentials());
 
+        User user = userRepository.findByCredentials(credentials);
 
-        for (User u : users) {
-            if (u.getCredentials().getUsername().equals(tweetRequestDto.getCredentials().getUsername())
-                    & u.getCredentials().getPassword().equals(tweetRequestDto.getCredentials().getPassword())) {
+        tweet.setAuthor(user);
+        tweetRepository.save(tweet);
 
-                tweet.setAuthor(u);
+        String[] splitContent = tweet.getContent().split(" ");
 
-//                Matcher matcher = Pattern.compile("(@[^@\\s]*)")
-//                        .matcher(tweet.getContent());
-//                while (matcher.find()) {
-//                    h
-//                }
+        ArrayList<User> mentions = new ArrayList<>();
+
+        for (String s : splitContent) {
+            if (s.charAt(0) == '@') {
+                String mention = s.substring(1,s.length());
+                User mentionedUser = userRepository.findByCredentialsUsername(mention);
+
+                if (mentionedUser != null) {
+                    mentions.add(mentionedUser);
+                }
             }
-
         }
-        return tweetMapper.entityToDto(tweetRepository.saveAndFlush(tweet));
+
+        tweet.setMentionedUsers(mentions);
+
+        ArrayList<Hashtag> hashtags = new ArrayList<>();
+
+        for (String s : splitContent) {
+            if (s.charAt(0) == '#') {
+                String label = s.substring(1,s.length());
+
+                Hashtag hashtag = new Hashtag();
+
+                if (hashtagRepository.findByLabel(label) != null) {
+                    hashtag.getTweets().add(tweet);
+                    hashtagRepository.saveAndFlush(hashtag);
+                } else {
+                    ArrayList<Tweet> tweets = new ArrayList<>();
+                    tweets.add(tweet);
+                    hashtag.setLabel(label);
+                    hashtag.setTweets(tweets);
+                    hashtagRepository.saveAndFlush(hashtag);
+                }
+            }
+        }
+        tweet.setHashtags(hashtags);
+        return tweetMapper.entityToDto(tweet);
     }
 
 
