@@ -2,7 +2,6 @@ package com.cooksys.social_media_api.services.impl;
 
 import com.cooksys.social_media_api.dtos.*;
 import com.cooksys.social_media_api.embeddables.Credentials;
-import com.cooksys.social_media_api.embeddables.Profile;
 import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
 import com.cooksys.social_media_api.exceptions.BadRequestException;
@@ -12,12 +11,8 @@ import com.cooksys.social_media_api.mappers.ProfileMapper;
 import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.UserRepository;
-import com.cooksys.social_media_api.services.TweetService;
 import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,6 +64,7 @@ public class UserServiceImpl implements UserService {
         }
 
         CredentialsDto credentialsDto = userRequestDto.getCredentials();
+
         ProfileDto profileDto = userRequestDto.getProfile();
 
         if(credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null){
@@ -176,6 +172,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TweetResponseDto> getAllNonDeletedTweetsByUsername(String username) {
         User user = userRepository.findByCredentialsUsername(username);
+
+        // user is null, cannot invoke user.getTweets(); //
+
         List<Tweet> userTweets = user.getTweets();
         List<Tweet> nonDelTweets = new ArrayList<>();
         for (Tweet tweet : userTweets) {
@@ -192,6 +191,9 @@ public class UserServiceImpl implements UserService {
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
         User user = userRepository.findByCredentialsUsername(username);
         List<Tweet> tweetsUserMentionedIn = user.getMentionedTweets();
+
+        // user is null, cannot invoke user.getMentionedTweets(); //
+
         List<Tweet> nonDelTweets = new ArrayList<>();
         for (Tweet tweet : tweetsUserMentionedIn) {
             if (!tweet.isDeleted()) {
