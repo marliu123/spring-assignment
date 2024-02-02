@@ -11,6 +11,7 @@ import com.cooksys.social_media_api.exceptions.NotFoundException;
 import com.cooksys.social_media_api.mappers.CredentialsMapper;
 import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.repositories.HashtagRepository;
+import com.cooksys.social_media_api.mappers.UserMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.TweetService;
@@ -32,6 +33,7 @@ public class TweetServiceImpl implements TweetService {
     private final CredentialsMapper credentialsMapper;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
 
     private void validateTweetRequestDto(TweetRequestDto tweetRequestDto) {
@@ -185,8 +187,10 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public List<UserResponseDto> getAllUsersMentionedInSpeciTweet(Long id) {
-//        return tweetMapper.entitiesToDtos(tweetRepository.getAllUsersMentionedInSpeciTweet(id));
-        //can just get the tweet, iterate through mentions in body
+        Optional<Tweet> tweet = tweetRepository.findById(id);
+        if (tweet.isPresent()) {
+            return userMapper.entitiesToDtos(tweet.get().getMentionedUsers());
+        }
 
         return null;
     }
