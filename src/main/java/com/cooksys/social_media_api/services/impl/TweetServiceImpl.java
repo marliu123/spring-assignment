@@ -11,6 +11,7 @@ import com.cooksys.social_media_api.mappers.TweetMapper;
 import com.cooksys.social_media_api.repositories.TweetRepository;
 import com.cooksys.social_media_api.repositories.UserRepository;
 import com.cooksys.social_media_api.services.TweetService;
+import com.cooksys.social_media_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
     private final TweetMapper tweetMapper;
+    private final UserService userService;
     private final UserRepository userRepository;
 
 
@@ -103,7 +105,15 @@ public class TweetServiceImpl implements TweetService {
         }
 
 
-    public void likeTweetById(Long id) {//add/send like to tweet by ID}
+    public void likeTweetById(CredentialsDto userCredentials, Long id) {
+        User userToLike = userService.validateUserCredentials(userCredentials);
+        List<Tweet> usersLikedTweets = userToLike.getLikedTweets();
+        Optional<Tweet> tweetToLike = tweetRepository.findById(id);
+        if (tweetToLike.isPresent()) {
+            usersLikedTweets.add(tweetToLike.get());
+            userToLike.setLikedTweets(usersLikedTweets);
+            userService.updateUserLikedTweets(userToLike);
+        }
     }
 
     public TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet) {
@@ -150,5 +160,15 @@ public class TweetServiceImpl implements TweetService {
     public List<TweetResponseDto> getTweetsByHashtag(Hashtag hashtag) {
         List<Tweet> tweetsWithHashtag = tweetRepository.findByHashtagsIsContaining(hashtag);
         return tweetMapper.entitiesToDtos(tweetsWithHashtag);
+    }
+
+    public List<TweetResponseDto> getAllNonDeletedTweetsByUser(User user) {
+        List<Tweet> allNonDelByUser = tweetRepository.findByAuthorAndDeletedFalse(user);
+        return tweetMapper.entitiesToDtos(allNonDelByUser);
+    }
+
+    public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user) {
+        List<Tweet> tweetsUserIsMentionedIn = tweetRepository.findByDeletedFalseAndMentionedUsersContaining(user);
+        return tweetMapper.entitiesToDtos(tweetsUserIsMentionedIn);
     }
 }

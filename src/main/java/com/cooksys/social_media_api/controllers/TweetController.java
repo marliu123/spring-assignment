@@ -26,6 +26,7 @@ public class TweetController {
         return tweetService.addNewTweet(tweetRequestDto);
     }
 
+
     @GetMapping("/{id}")
     public TweetResponseDto getTweetById(@PathVariable Long id) {
         return tweetService.getTweetById(id);
@@ -37,8 +38,8 @@ public class TweetController {
     }
 
     @PostMapping("/{id}/like")
-    public void likeTweetById(@PathVariable Long id) {
-//        return tweetService.likeTweetById(id);
+    public void likeTweetById(@RequestBody CredentialsDto userCredentials, @PathVariable Long id) {
+        tweetService.likeTweetById(userCredentials, id);
     }
 
     @PostMapping("/{id}/reply")
