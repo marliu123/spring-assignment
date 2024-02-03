@@ -151,12 +151,14 @@ public class TweetServiceImpl implements TweetService {
 
     public void likeTweetById(CredentialsDto userCredentials, Long id) {
         User userToLike = userService.validateUserCredentials(userCredentials);
-        List<Tweet> usersLikedTweets = userToLike.getLikedTweets();
-        Optional<Tweet> tweetToLike = tweetRepository.findById(id);
-        if (tweetToLike.isPresent()) {
-            usersLikedTweets.add(tweetToLike.get());
-            userToLike.setLikedTweets(usersLikedTweets);
-            userService.updateUserLikedTweets(userToLike);
+        if (!userToLike.isDeleted()) {
+            List<Tweet> usersLikedTweets = userToLike.getLikedTweets();
+            Optional<Tweet> tweetToLike = tweetRepository.findById(id);
+            if (tweetToLike.isPresent()) {
+                usersLikedTweets.add(tweetToLike.get());
+                userToLike.setLikedTweets(usersLikedTweets);
+                userService.updateUserLikedTweets(userToLike);
+            }
         }
     }
 
@@ -257,18 +259,19 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public List<UserResponseDto> getAllUsersThatLikedSpeciTweet(Long id) {
-    	if(tweetRepository.findById(id) == null) {
+        Optional<Tweet> tweetToLike = tweetRepository.findById(id);
+    	if(tweetToLike.isEmpty() || tweetToLike.get().isDeleted()) {
     		throw new NotFoundException("no tweet with id "+id);
     	}
-    	Optional<Tweet> tweet = tweetRepository.findById(id);
-    	List<User> list = tweet.get().getLikedByUsers();
-    	List<User> list2 = new ArrayList<>();
-    	for(User u: list) {
-    		if(u.isDeleted() == false) {
-    		 	 list2.add(u);
-    		}
-    	}
-        return userMapper.entitiesToDtos(list2); 
+        List<User> usersThatLiked = tweetToLike.get().getLikedByUsers();
+        List<User> activeUsersThatLiked = new ArrayList<>();
+
+        for (User user : usersThatLiked) {
+            if (!user.isDeleted()) {
+                activeUsersThatLiked.add(user);
+            }
+        }
+        return userMapper.entitiesToDtos(activeUsersThatLiked);
     }
 
     public List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id) {
@@ -320,7 +323,7 @@ public class TweetServiceImpl implements TweetService {
 
     public ContextDto getTweetContext(Long id) {
         Optional<Tweet> target = tweetRepository.findById(id);
-        if (target.isPresent()) {
+        if (target.isPresent() && !target.get().isDeleted()) {
             List<Tweet> before = getBeforeTweetChain(target.get());
             List<Tweet> after = getAfterTweetChain(target.get());
 
@@ -331,7 +334,7 @@ public class TweetServiceImpl implements TweetService {
 
             return tweetContext;
         }
-        return null;
+        throw new NotFoundException("This tweet does not exist and does not have a context");
     }
 
     public List<Tweet> getBeforeTweetChain(Tweet tweet) {
@@ -348,7 +351,9 @@ public class TweetServiceImpl implements TweetService {
     public List<Tweet> getAfterTweetChain(Tweet tweet) {
         List<Tweet> afterChain = new ArrayList<>();
         for (Tweet t : tweet.getReplies()){
+            if (!t.isDeleted()) {
             afterChain.add(t);
+            }
             afterChain.addAll(getAfterTweetChain(t));
         }
         return afterChain;
