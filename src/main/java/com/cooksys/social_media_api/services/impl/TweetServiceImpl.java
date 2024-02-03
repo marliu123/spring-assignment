@@ -321,8 +321,34 @@ public class TweetServiceImpl implements TweetService {
     public ContextDto getTweetContext(Long id) {
         Optional<Tweet> target = tweetRepository.findById(id);
         if (target.isPresent()) {
+            List<Tweet> before = getBeforeTweetChain(target.get());
+            List<Tweet> after = getAfterTweetChain(target.get());
 
+            ContextDto tweetContext = new ContextDto();
+            tweetContext.setTarget(tweetMapper.entityToDto(target.get()));
+            tweetContext.setBefore(tweetMapper.entitiesToDtos(before));
+            tweetContext.setAfter(tweetMapper.entitiesToDtos(after));
         }
         return null;
+    }
+
+    public List<Tweet> getBeforeTweetChain(Tweet tweet) {
+        List<Tweet> beforeChain = new ArrayList<>();
+
+        if (tweet.getInReplyTo() != null) {
+            beforeChain.add(tweet.getInReplyTo());
+            beforeChain.addAll(getBeforeTweetChain(tweet.getInReplyTo()));
+        }
+
+        return beforeChain;
+    }
+
+    public List<Tweet> getAfterTweetChain(Tweet tweet) {
+        List<Tweet> afterChain = new ArrayList<>();
+        for (Tweet t : tweet.getReplies()){
+            afterChain.add(t);
+            afterChain.addAll(getAfterTweetChain(t));
+        }
+        return afterChain;
     }
 }

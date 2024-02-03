@@ -6,6 +6,7 @@ import com.cooksys.social_media_api.dtos.TweetResponseDto;
 import com.cooksys.social_media_api.dtos.UserResponseDto;
 import com.cooksys.social_media_api.entities.Hashtag;
 import com.cooksys.social_media_api.dtos.*;
+import com.cooksys.social_media_api.entities.Tweet;
 import com.cooksys.social_media_api.entities.User;
 
 
@@ -29,5 +30,7 @@ public interface TweetService {
     List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user);
     void likeTweetById(CredentialsDto userCredentials, Long id);
     ContextDto getTweetContext(Long id);
+    List<Tweet> getBeforeTweetChain(Tweet tweet);
+    List<Tweet> getAfterTweetChain(Tweet tweet);
 
 }
