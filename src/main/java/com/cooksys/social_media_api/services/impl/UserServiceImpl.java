@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
     	if(userRequestDto == null){
             throw new BadRequestException("User request is null");
         }
+    	User user = userMapper.requestDtoToEntity(userRequestDto);
         CredentialsDto credentialsDto = userRequestDto.getCredentials();
 
         ProfileDto profileDto = userRequestDto.getProfile();
@@ -74,19 +75,19 @@ public class UserServiceImpl implements UserService {
         if(profileDto == null || profileDto.getEmail() == null){
             throw new BadRequestException("Profile is invalid");
         }
-        User existingUser = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
-        if(existingUser != null){
-        	if(existingUser.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername()) && existingUser.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword())) {
-	        	existingUser.setDeleted(false);
-	        	userRepository.saveAndFlush(existingUser);
-	            throw new BadRequestException("User exists"); 
-        	} else {
-        		throw new BadRequestException("Username already taken"); 
+        for(User u: userRepository.findAll()) {
+        	if(u.getCredentials().getUsername().equals(credentialsDto.getUsername())) {
+        		if(u.isDeleted()) {
+        			u.setDeleted(false);
+            		return userMapper.entityToDto(userRepository.saveAndFlush(u));
+        		}else {
+            		throw new BadRequestException("Username already taken");
+            	}
         	}
-        }
-    	User user = userMapper.requestDtoToEntity(userRequestDto);
-    	user.setDeleted(false);
-    	return userMapper.entityToDto(userRepository.saveAndFlush(user));
+        } 
+    	user.setProfile(userMapper.requestDtoToEntity(userRequestDto).getProfile());
+    	user.setCredentials(userMapper.requestDtoToEntity(userRequestDto).getCredentials());
+    	return userMapper.entityToDto(userRepository.saveAndFlush(user)); 
     	
     }
 
