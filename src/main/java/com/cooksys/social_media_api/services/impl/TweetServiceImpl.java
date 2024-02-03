@@ -109,6 +109,7 @@ public class TweetServiceImpl implements TweetService {
             }
         }
         tweet.setHashtags(hashtags);
+
         return tweetMapper.entityToDto(tweet);
     }
 

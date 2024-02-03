@@ -31,9 +31,6 @@ public class HashtagServiceImpl implements HashtagService {
             throw new NotFoundException("hashtag is null");
         }
 
-        // Cannot invoke "com.cooksys.social_media_api.entities.Hashtag.getTweets()"
-            // because "hashtag" is null
-
         return tweetMapper.entitiesToDtos(hashtag.getTweets());
     }
 }
