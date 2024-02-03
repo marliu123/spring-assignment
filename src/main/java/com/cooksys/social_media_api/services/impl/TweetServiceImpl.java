@@ -154,8 +154,63 @@ public class TweetServiceImpl implements TweetService {
         }
     }
 
-    public TweetResponseDto replyToTweetById(Long id, TweetRequestDto tweet) {
-//        return tweetMapper.entityToDto(tweetRepository.replyToTweetById(id, tweet));
+    public TweetResponseDto replyToTweetById(TweetRequestDto tweet, Long id) {
+        Credentials credentials = credentialsMapper.dtoToEntity(tweet.getCredentials());
+        String content = tweet.getContent();
+        User user = userRepository.findByCredentials(credentials);
+        if (user != null) {
+            Optional<Tweet> tweetToReplyTo = tweetRepository.findById(id);
+            if (tweetToReplyTo.isPresent()) {
+                Tweet newTweet = new Tweet();
+                newTweet.setAuthor(user);
+                newTweet.setDeleted(false);
+                newTweet.setContent(content);
+                newTweet.setInReplyTo(tweetToReplyTo.get());
+
+                String[] splitContent = content.split(" ");
+
+                ArrayList<User> mentions = new ArrayList<>();
+
+                for (String s : splitContent) {
+                    if (s.charAt(0) == '@') {
+                        String mention = s.substring(1);
+                        User mentionedUser = userRepository.findByCredentialsUsername(mention);
+
+                        if (mentionedUser != null) {
+                            mentions.add(mentionedUser);
+                        }
+                    }
+                }
+
+                newTweet.setMentionedUsers(mentions);
+
+                ArrayList<Hashtag> hashtags = new ArrayList<>();
+
+                for (String s : splitContent) {
+                    if (s.charAt(0) == '#') {
+                        String label = s.substring(1);
+
+                        Hashtag hashtag = new Hashtag();
+
+                        if (hashtagRepository.findByLabel(label) != null) {
+                            hashtag.getTweets().add(newTweet);
+                            hashtagRepository.saveAndFlush(hashtag);
+                        } else {
+                            ArrayList<Tweet> tweets = new ArrayList<>();
+                            tweets.add(newTweet);
+                            hashtag.setLabel(label);
+                            hashtag.setTweets(tweets);
+                            hashtagRepository.saveAndFlush(hashtag);
+                        }
+                    }
+                }
+
+
+                tweetRepository.save(newTweet);
+
+
+            }
+        }
         return null;
     }
 
