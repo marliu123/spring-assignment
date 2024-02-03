@@ -328,6 +328,8 @@ public class TweetServiceImpl implements TweetService {
             tweetContext.setTarget(tweetMapper.entityToDto(target.get()));
             tweetContext.setBefore(tweetMapper.entitiesToDtos(before));
             tweetContext.setAfter(tweetMapper.entitiesToDtos(after));
+
+            return tweetContext;
         }
         return null;
     }
