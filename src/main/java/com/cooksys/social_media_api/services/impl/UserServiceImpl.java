@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService {
     	if(userRequestDto == null){
             throw new BadRequestException("User request is null");
         }
-
         CredentialsDto credentialsDto = userRequestDto.getCredentials();
 
         ProfileDto profileDto = userRequestDto.getProfile();
@@ -75,9 +74,15 @@ public class UserServiceImpl implements UserService {
         if(profileDto == null || profileDto.getEmail() == null){
             throw new BadRequestException("Profile is invalid");
         }
-
-        if(userRepository.findByCredentialsUsername(credentialsDto.getUsername()) != null){
-            throw new BadRequestException("User already exists");
+        User existingUser = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
+        if(existingUser != null){
+        	if(existingUser.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername()) && existingUser.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword())) {
+	        	existingUser.setDeleted(false);
+	            userRepository.saveAndFlush(existingUser);
+	            return userMapper.entityToDto(existingUser);
+        	} else {
+        		throw new BadRequestException("Username already taken"); 
+        	}
         }
     	User user = userMapper.requestDtoToEntity(userRequestDto);
     	user.setDeleted(false);
