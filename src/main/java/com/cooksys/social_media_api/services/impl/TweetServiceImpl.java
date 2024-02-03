@@ -167,12 +167,16 @@ public class TweetServiceImpl implements TweetService {
             repostedTweet.setAuthor(userToRepost);
             repostedTweet.setDeleted(false);
             repostedTweet.setContent(tweetToRepost.get().getContent());
-            repostedTweet.setReplies(tweetToRepost.get().getReplies());
+            repostedTweet.setReplies(new ArrayList<>(tweetToRepost.get().getReplies()));
             repostedTweet.setInReplyTo(tweetToRepost.get());
             repostedTweet.setRepostOf(tweetToRepost.get());
-            repostedTweet.setHashtags(tweetToRepost.get().getHashtags());
-            repostedTweet.setLikedByUsers(tweetToRepost.get().getLikedByUsers());
-            repostedTweet.setMentionedUsers(tweetToRepost.get().getMentionedUsers());
+            repostedTweet.setHashtags(new ArrayList<>(tweetToRepost.get().getHashtags()));
+            repostedTweet.setLikedByUsers(new ArrayList<>(tweetToRepost.get().getLikedByUsers()));
+            repostedTweet.setMentionedUsers(new ArrayList<>(tweetToRepost.get().getMentionedUsers()));
+
+            repostedTweet = tweetRepository.saveAndFlush(repostedTweet);
+
+            return tweetMapper.entityToDto(repostedTweet);
         }
         return null;
     }
