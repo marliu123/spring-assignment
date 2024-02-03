@@ -237,7 +237,7 @@ public class TweetServiceImpl implements TweetService {
             repostedTweet.setDeleted(false);
             repostedTweet.setContent(tweetToRepost.get().getContent());
             repostedTweet.setReplies(new ArrayList<>(tweetToRepost.get().getReplies()));
-            repostedTweet.setInReplyTo(tweetToRepost.get());
+//            repostedTweet.setInReplyTo(tweetToRepost.get());
             repostedTweet.setRepostOf(tweetToRepost.get());
             repostedTweet.setHashtags(new ArrayList<>(tweetToRepost.get().getHashtags()));
             repostedTweet.setLikedByUsers(new ArrayList<>(tweetToRepost.get().getLikedByUsers()));
