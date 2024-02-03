@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,7 +155,7 @@ public class TweetServiceImpl implements TweetService {
         if (!userToLike.isDeleted()) {
             List<Tweet> usersLikedTweets = userToLike.getLikedTweets();
             Optional<Tweet> tweetToLike = tweetRepository.findById(id);
-            if (tweetToLike.isPresent()) {
+            if (tweetToLike.isPresent() && !tweetToLike.get().getLikedByUsers().contains(userToLike)) {
                 usersLikedTweets.add(tweetToLike.get());
                 userToLike.setLikedTweets(usersLikedTweets);
                 userService.updateUserLikedTweets(userToLike);
@@ -356,6 +357,12 @@ public class TweetServiceImpl implements TweetService {
             }
             afterChain.addAll(getAfterTweetChain(t));
         }
+        afterChain.sort(new Comparator<Tweet>() {
+            @Override
+            public int compare(Tweet o1, Tweet o2) {
+                return o2.getPosted().compareTo(o1.getPosted());
+            }
+        });
         return afterChain;
     }
 }
