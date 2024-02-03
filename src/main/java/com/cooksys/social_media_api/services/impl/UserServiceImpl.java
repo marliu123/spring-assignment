@@ -78,8 +78,8 @@ public class UserServiceImpl implements UserService {
         if(existingUser != null){
         	if(existingUser.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername()) && existingUser.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword())) {
 	        	existingUser.setDeleted(false);
-	            userRepository.saveAndFlush(existingUser);
-	            return userMapper.entityToDto(existingUser);
+	        	userRepository.saveAndFlush(existingUser);
+	            throw new BadRequestException("User exists"); 
         	} else {
         		throw new BadRequestException("Username already taken"); 
         	}
