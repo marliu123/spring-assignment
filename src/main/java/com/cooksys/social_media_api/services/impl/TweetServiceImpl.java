@@ -195,7 +195,7 @@ public class TweetServiceImpl implements TweetService {
     	List<User> list2 = new ArrayList<>();
     	for(User u: list) {
     		if(u.isDeleted() == false) {
-    			list2.add(u);
+    		 	 list2.add(u);
     		}
     	}
         return userMapper.entitiesToDtos(list2); 
