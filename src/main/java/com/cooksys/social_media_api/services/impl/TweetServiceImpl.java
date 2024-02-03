@@ -350,7 +350,7 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public List<Tweet> getAfterTweetChain(Tweet tweet) {
-        List<Tweet> afterChain = new ArrayList<>();
+        List<Tweet> afterChain = new ArrayList<>(); 
         for (Tweet t : tweet.getReplies()){
             if (!t.isDeleted()) {
             afterChain.add(t);
