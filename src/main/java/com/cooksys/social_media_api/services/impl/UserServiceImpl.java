@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -171,9 +172,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getFeed(String username) {
-        User user = userRepository.findByCredentialsUsername(username.substring(1));
+        User user = userRepository.findByCredentialsUsername(username);
 
-        // user is always null in tests -- why?
+        if (user == null || user.isDeleted()) {
+            throw new NotFoundException("user is null or account inactive");
+        }
+
+        List<Tweet> userTweets = user.getTweets();
+        List<Tweet> feed = new ArrayList<>();
+        List<User> followedUsers = user.getFollowing();
+
+        for (Tweet tweet : userTweets) {
+            if (!tweet.isDeleted()) {
+                feed.add(tweet);
+
+            }
+        }
+
+        for (User u : followedUsers) {
+            for (Tweet tweet : u.getTweets()) {
+                if (!tweet.isDeleted()) {
+                    feed.add(tweet);
+                }
+            }
+        }
+        feed.stream().sorted(Comparator.comparing(Tweet::getPosted).reversed());
+
+        return tweetMapper.entitiesToDtos(feed);
+    }
+
+    @Override
+    public List<TweetResponseDto> getAllNonDeletedTweetsByUser(String username) {
+        User user = userRepository.findByCredentialsUsername(username);
 
         if (user == null || user.isDeleted()) {
             throw new NotFoundException("user is null or account inactive");
@@ -195,7 +225,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username) {
-        User user = userRepository.findByCredentialsUsername(username.substring(1));
+        User user = userRepository.findByCredentialsUsername(username);
 
         if (user == null || user.isDeleted()) {
             throw new NotFoundException("user is null or account inactive");
@@ -217,7 +247,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllActiveFollowersOfUser(String username) {
-        User user = userRepository.findByCredentialsUsername(username.substring(1));
+        User user = userRepository.findByCredentialsUsername(username);
 
         // user is always null in tests -- why?
 
@@ -234,9 +264,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing(String username) {
-        User user = userRepository.findByCredentialsUsername(username.substring(1));
-
-        // user is always null in tests -- why?
+        User user = userRepository.findByCredentialsUsername(username);
 
         if (user == null || user.isDeleted()) {
             throw new NotFoundException("user is null or account inactive");
