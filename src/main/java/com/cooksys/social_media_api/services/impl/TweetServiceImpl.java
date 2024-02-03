@@ -317,4 +317,8 @@ public class TweetServiceImpl implements TweetService {
         List<Tweet> tweetsUserIsMentionedIn = tweetRepository.findByDeletedFalseAndMentionedUsersContaining(user);
         return tweetMapper.entitiesToDtos(tweetsUserIsMentionedIn);
     }
+
+    public ContextDto getTweetContext(Long id) {
+        return null;
+    }
 }
