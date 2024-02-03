@@ -1,11 +1,5 @@
 //package com.cooksys.social_media_api;
 //
-//import java.util.Arrays;
-//import java.util.List;
-//
-//import org.springframework.boot.CommandLineRunner;
-//import org.springframework.stereotype.Component;
-//
 //import com.cooksys.social_media_api.embeddables.Credentials;
 //import com.cooksys.social_media_api.embeddables.Profile;
 //import com.cooksys.social_media_api.entities.Hashtag;
@@ -14,8 +8,12 @@
 //import com.cooksys.social_media_api.repositories.HashtagRepository;
 //import com.cooksys.social_media_api.repositories.TweetRepository;
 //import com.cooksys.social_media_api.repositories.UserRepository;
-//
 //import lombok.RequiredArgsConstructor;
+//import org.springframework.boot.CommandLineRunner;
+//import org.springframework.stereotype.Component;
+//
+//import java.util.Arrays;
+//import java.util.List;
 //
 //@Component
 //@RequiredArgsConstructor

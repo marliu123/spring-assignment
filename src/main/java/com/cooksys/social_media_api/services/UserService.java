@@ -24,6 +24,7 @@ public interface UserService {
     void unfollowUserByUsername(String username, CredentialsDto credentials);
 
     List<TweetResponseDto> getFeed(String username);
+    List<TweetResponseDto> getAllNonDeletedTweetsByUser(String username);
 
     List<TweetResponseDto> getAllTweetsUserIsMentionedIn(String username);
 

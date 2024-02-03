@@ -44,23 +44,27 @@ public class UserController {
         userService.unfollowUserByUsername(username, credentials);
     }
 
-    @GetMapping("/{username}/feed")
-    public List<TweetResponseDto> getFeed(@PathVariable String username) {
-        return userService.getFeed(username); }
+    @GetMapping("/@{username}/feed")
+    List<TweetResponseDto> getFeed(@PathVariable String username) {
+        return userService.getFeed(username);
+    }
+    @GetMapping("/@{username}/tweets")
+    public List<TweetResponseDto> getAllNonDeletedTweetsByUser(@PathVariable String username) {
+        return userService.getAllNonDeletedTweetsByUser(username); }
 
-    @GetMapping("/{username}/mentions")
+    @GetMapping("/@{username}/mentions")
     public List<TweetResponseDto> getAllTweetsUserIsMentionedIn(@PathVariable String username) {
         return userService.getAllTweetsUserIsMentionedIn(username);
     }
 
     // me
-    @GetMapping("/{username}/followers")
+    @GetMapping("/@{username}/followers")
     public List<UserResponseDto> getAllActiveFollowersOfUser(@PathVariable String username) {
         return userService.getAllActiveFollowersOfUser(username);
     }
 
     //me
-    @GetMapping("/{username}/following")
+    @GetMapping("/@{username}/following")
     public List<UserResponseDto> getAllActiveUsersThatAUserIsFollowing (@PathVariable String username) {
         return userService.getAllActiveUsersThatAUserIsFollowing(username);
     }

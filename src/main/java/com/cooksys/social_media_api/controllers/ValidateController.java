@@ -19,12 +19,12 @@ public class ValidateController {
         return validateService.hashtagExists(label);
     }
 
-    @GetMapping("/username/exists/{username}")
+    @GetMapping("/username/exists/@{username}")
     public boolean usernameExists(@PathVariable String username){
         return validateService.usernameExists(username);
     }
 
-    @GetMapping("/username/available/{username}")
+    @GetMapping("/username/available/@{username}")
     public boolean usernameAvailable(@PathVariable String username){
         return validateService.usernameAvailable(username);
     }

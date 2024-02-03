@@ -77,7 +77,7 @@ public class TweetServiceImpl implements TweetService {
 
         for (String s : splitContent) {
             if (s.charAt(0) == '@') {
-                String mention = s.substring(1,s.length());
+                String mention = s.substring(1);
                 User mentionedUser = userRepository.findByCredentialsUsername(mention);
 
                 if (mentionedUser != null) {
@@ -92,7 +92,7 @@ public class TweetServiceImpl implements TweetService {
 
         for (String s : splitContent) {
             if (s.charAt(0) == '#') {
-                String label = s.substring(1,s.length());
+                String label = s.substring(1);
 
                 Hashtag hashtag = new Hashtag();
 
