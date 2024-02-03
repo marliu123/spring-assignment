@@ -314,6 +314,10 @@ public class TweetServiceImpl implements TweetService {
     }
 
     public ContextDto getTweetContext(Long id) {
+        Optional<Tweet> target = tweetRepository.findById(id);
+        if (target.isPresent()) {
+
+        }
         return null;
     }
 }
