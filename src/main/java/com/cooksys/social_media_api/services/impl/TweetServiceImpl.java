@@ -205,9 +205,14 @@ public class TweetServiceImpl implements TweetService {
                     }
                 }
 
+               List<Tweet> newReplies = tweetToReplyTo.get().getReplies();
 
-                tweetRepository.save(newTweet);
+                Tweet savedReplyTweet = tweetRepository.save(newTweet);
+               newReplies.add(savedReplyTweet);
 
+               tweetToReplyTo.get().setReplies(newReplies);
+
+               return tweetMapper.entityToDto(savedReplyTweet);
 
             }
         }
