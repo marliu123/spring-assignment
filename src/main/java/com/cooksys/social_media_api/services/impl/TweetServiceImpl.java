@@ -192,7 +192,13 @@ public class TweetServiceImpl implements TweetService {
     	}
     	Optional<Tweet> tweet = tweetRepository.findById(id);
     	List<User> list = tweet.get().getLikedByUsers();
-        return userMapper.entitiesToDtos(list); 
+    	List<User> list2 = new ArrayList<>();
+    	for(User u: list) {
+    		if(u.isDeleted() == false) {
+    			list2.add(u);
+    		}
+    	}
+        return userMapper.entitiesToDtos(list2); 
     }
 
     public List<TweetResponseDto> getAllRepliesForSpeciTweet(Long id) {
@@ -201,7 +207,13 @@ public class TweetServiceImpl implements TweetService {
     	}
     	Optional<Tweet> tweet = tweetRepository.findById(id);
     	List<Tweet> list = tweet.get().getReplies();
-    	return tweetMapper.entitiesToDtos(list); 
+    	List<Tweet> list2 = new ArrayList<>();
+    	for(Tweet t: list) {
+    		if(t.getInReplyTo().getAuthor().isDeleted() == false) {
+    			list2.add(t);
+    		}
+    	}
+    	return tweetMapper.entitiesToDtos(list2); 
     }
 
     public List<TweetResponseDto> getAllRepostsForSpeciTweet(Long id) {
