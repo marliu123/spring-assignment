@@ -25,7 +25,7 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     public List<TweetResponseDto> getAllTweetsByHashtag(String label) {
-        Hashtag hashtag = hashtagRepository.findByLabel("#" + label);
+        Hashtag hashtag = hashtagRepository.findByLabel(label);
 
         if (hashtag == null) {
             throw new NotFoundException("hashtag is null");

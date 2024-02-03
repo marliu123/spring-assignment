@@ -69,7 +69,7 @@ public class TweetServiceImpl implements TweetService {
         User user = userRepository.findByCredentials(credentials);
 
         tweet.setAuthor(user);
-        tweetRepository.save(tweet);
+        tweet.setDeleted(false);
 
         String[] splitContent = tweet.getContent().split(" ");
 
@@ -94,21 +94,26 @@ public class TweetServiceImpl implements TweetService {
             if (s.charAt(0) == '#') {
                 String label = s.substring(1);
 
-                Hashtag hashtag = new Hashtag();
+                Hashtag hashtag = hashtagRepository.findByLabel(label);
 
-                if (hashtagRepository.findByLabel(label) != null) {
+                if (hashtag != null) {
                     hashtag.getTweets().add(tweet);
                     hashtagRepository.saveAndFlush(hashtag);
                 } else {
+                    Hashtag newHashtag = new Hashtag();
                     ArrayList<Tweet> tweets = new ArrayList<>();
+
                     tweets.add(tweet);
-                    hashtag.setLabel(label);
-                    hashtag.setTweets(tweets);
-                    hashtagRepository.saveAndFlush(hashtag);
+                    newHashtag.setLabel(label);
+                    newHashtag.setTweets(tweets);
+                    hashtags.add(newHashtag);
+
+                    hashtagRepository.saveAndFlush(newHashtag);
                 }
             }
         }
         tweet.setHashtags(hashtags);
+        tweetRepository.saveAndFlush(tweet);
 
         return tweetMapper.entityToDto(tweet);
     }
