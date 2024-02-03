@@ -28,5 +28,6 @@ public interface TweetService {
     List<TweetResponseDto> getAllNonDeletedTweetsByUser(User user);
     List<TweetResponseDto> getAllTweetsUserIsMentionedIn(User user);
     void likeTweetById(CredentialsDto userCredentials, Long id);
+    ContextDto getTweetContext(Long id);
 
 }
